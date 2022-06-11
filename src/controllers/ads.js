@@ -28,13 +28,13 @@ class AdsController{
                 ...body
             }, {
                 where:{
-                    id: params.id
+                    telegram_id: params.id
                 }
             })
 
             if (!updated[0]) {
                 res.status(400).json({
-                    ok: true,
+                    ok: false,
                     message: "Failed to update"
                 })
                 return
@@ -122,7 +122,11 @@ class AdsController{
             })
 
             if (!ad) {
-                throw new res.error(400, "Ad not found!")
+                res.status(400).json({
+                    ok: fasle,
+                    message: "Not found"
+                })
+                return
             }
 
             res.status(200).json({

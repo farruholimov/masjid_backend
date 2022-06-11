@@ -18,8 +18,7 @@ module.exports = (sequelize, DataTypes) => {
           defaultValue: 1
         },
         telegram_id: {
-          type: DataTypes.INTEGER,
-          allowNull: false
+          type: DataTypes.BIGINT,
         },
         step: {
           type: DataTypes.STRING(32),

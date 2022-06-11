@@ -11,13 +11,13 @@ class UsersController{
         try {
             const { body } = req
 
-            const user = await users.findOne({
+            const user = await admin_users.findOne({
                 where: {
                     username: body.username
                 },
                 include: [
                     {
-                        model: admin_users
+                        model: users
                     }
                 ],
                 raw: true
@@ -26,21 +26,21 @@ class UsersController{
             if (!user) {
                 res.status(400).json({
                     ok: false,
-                    message: "User not found! Check ID!"
+                    message: "Incorrect username or password!"
                 })
                 return
             }
-            if (user.role != 2) {
+            if (user["users.role"] != 1) {
                 res.status(400).json({
                     ok: false,
-                    message: "Not an admin! Access denied!"
+                    message: "Access denied!"
                 })
                 return
             }
-            if (!compareCrypt(body.password, user["admin_users.password"])) {
+            if (!compareCrypt(body.password, user.password)) {
                 res.status(400).json({
                     ok: false,
-                    message: "Incorrect ID or password!"
+                    message: "Incorrect username or password!"
                 })
                 return
             }
@@ -78,6 +78,54 @@ class UsersController{
 
     };
 
+    static async Create(req, res, next){
+        try {
+            const {body} = req
+
+            const newUser = await users.create({
+                ...body
+            })
+
+            res.status(200).json({
+                ok: true,
+                data: {
+                    user: newUser
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async Update(req, res, next) {
+        try {
+            const {body, params} = req
+
+            const updated = await users.update({
+                ...body
+            }, {
+                where:{
+                    telegram_id: params.id
+                }
+            })
+
+            if (!updated[0]) {
+                res.status(400).json({
+                    ok: false,
+                    message: "Failed to update"
+                })
+                return
+            }
+
+            res.status(200).json({
+                ok: true,
+                message: "User updated"
+            })
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+    }
 
     static async GetAllMosqueAdmins(req, res, next) {
         try {
@@ -175,6 +223,7 @@ class UsersController{
     static async GetOne(req, res, next) {
         try {
             const { params } = req
+            console.log(params);
 
             const user = await users.findOne({
                 where: {
@@ -183,7 +232,42 @@ class UsersController{
             })
 
             if (!user) {
-                throw new res.error(400, "User not found!")
+                if (!user) {
+                    res.status(400).json({
+                        ok: fasle,
+                        message: "Not found"
+                    })
+                    return
+                }
+            }
+
+            res.status(200).json({
+                ok: true,
+                data: {
+                    user
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async GetOneTg(req, res, next) {
+        try {
+            const { params } = req
+
+            const user = await users.findOne({
+                where: {
+                    telegram_id: params.id
+                }
+            })
+
+            if (!user) {
+                res.status(400).json({
+                    ok: fasle,
+                    message: "Not found"
+                })
+                return
             }
 
             res.status(200).json({

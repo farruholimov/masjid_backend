@@ -34,7 +34,7 @@ class MosquesController{
 
             if (!updated[0]) {
                 res.status(400).json({
-                    ok: true,
+                    ok: false,
                     message: "Failed to update"
                 })
                 return
@@ -115,13 +115,34 @@ class MosquesController{
             })
 
             if (!mosque) {
-                throw new res.error(400, "Mosque not found!")
+                res.status(400).json({
+                    ok: fasle,
+                    message: "Not found"
+                })
+                return
             }
 
             res.status(200).json({
                 ok: true,
                 data: {
                     mosque
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async GetAllTg(req, res, next) {
+        try {
+            const { query } = req
+
+            const allMosques = await mosques.findAndCountAll()
+
+            res.status(200).json({
+                ok: true,
+                data: {
+                    mosques: allMosques
                 }
             })
         } catch (error) {
