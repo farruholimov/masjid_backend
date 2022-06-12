@@ -1,8 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
     const mosque_admins = sequelize.define('mosque_admins', {
         id: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4(),
+          type: DataTypes.INTEGER,
+          autoIncrement: true,
           primaryKey: true,
           allowNull: false
         },
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         mosque_id: {
-            type: DataTypes.UUID,
+            type: DataTypes.INTEGER,
             references: {
               model: "mosques",
               key: "id"
@@ -22,6 +22,12 @@ module.exports = (sequelize, DataTypes) => {
         },
         password: {
           type: DataTypes.STRING(64),
+          allowNull: false
+        },
+        username: {
+          type: DataTypes.STRING(64),
+          allowNull: false,
+          unique: true
         }
       }, {
         updatedAt: 'updated_at',

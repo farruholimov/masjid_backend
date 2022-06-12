@@ -9,7 +9,8 @@ const { Op } = require("sequelize");
 
 const {
   models: {
-    users
+    users,
+    admin_users
   }
 } = require("../../db/db");
 
@@ -34,12 +35,19 @@ const protect = async (req, res, next) => {
       throw new res.error(400, "Unauthorized!")
     }
     
-    const user = await users.findByPk(decodedToken.id, {
-      attributes: ["id", "telegram_id", "full_name", "phone_number", "role"],
+    const user = await admin_users.findOne({
+      where: {
+        id: decodedToken.id
+      },
+      include: [{
+        model: users,
+        attributes: ["id", "telegram_id", "full_name", "phone_number", "role"]
+      }],
+      attributes: ["username"],
       raw: true
     })
-
-    if (!user) {
+    
+    if (!user || !user["user.id"]) {
       res.status(400).json({
         ok: false,
         message: "User does not exist!"
@@ -47,7 +55,7 @@ const protect = async (req, res, next) => {
       throw new res.error(401, "User does not exist")
     }
 
-    if(user.role != 1){
+    if(user["user.role"] != 1){
       res.status(400).json({
         ok: false,
         message: "Access denied"
@@ -56,16 +64,17 @@ const protect = async (req, res, next) => {
     }
 
     req.user = {
-        tgid: Number(user.telegram_id),
-        id: Number(user.id),
-        role: Number(user.role),
-    }
+      tgid: user["user.telegram_id"],
+      id: user.id,
+      user_id: user["user.id"],
+      role: Number(user["user.role"]),
+  }
     req.decodedToken = decodedToken;
 
     next()
 
   } catch (error) {
-    console.log(error);
+    console.log("PROTECT",error);
     res.status(400).json({
       ok: false,
       message: "Unathorized!"

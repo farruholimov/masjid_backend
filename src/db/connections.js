@@ -14,8 +14,8 @@ module.exports = (sequelize) => {
     admin_users.belongsTo(users, { foreignKey: "user_id", allowNull: false });
 
     users.hasMany(mosque_admins, { foreignKey: "user_id" });
-    mosque_admins.belongsTo(users, { foreignKey: "user_id", allowNull: false });
+    mosque_admins.belongsTo(users, { foreignKey: "user_id" });
 
     mosques.hasMany(mosque_admins, { foreignKey: "user_id" });
-    mosque_admins.belongsTo(mosques, { foreignKey: "user_id", allowNull: false });
+    mosque_admins.belongsTo(mosques, { foreignKey: "user_id" });
 }

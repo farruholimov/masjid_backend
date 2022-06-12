@@ -1,8 +1,8 @@
 module.exports = async (sequelize, DataTypes) => {
     const mosques = sequelize.define("mosques", {
         id: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4(),
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
             allowNull: false,
             primaryKey: true
         },

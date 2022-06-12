@@ -1,8 +1,8 @@
 const { sign } = require("jsonwebtoken")
-const { Op } = require("sequelize")
+const { Op, where } = require("sequelize")
 const configs = require("../config")
 const sequelize = require("../db/db")
-const { compareCrypt } = require("../modules/bcrypt")
+const { compareCrypt, createCrypt } = require("../modules/bcrypt")
 const { users, admin_users, mosque_admins, mosques } = sequelize.models
 
 class UsersController{
@@ -30,7 +30,7 @@ class UsersController{
                 })
                 return
             }
-            if (user["users.role"] != 1) {
+            if (user["user.role"] != 1) {
                 res.status(400).json({
                     ok: false,
                     message: "Access denied!"
@@ -45,10 +45,13 @@ class UsersController{
                 return
             }
 
+            console.log(user);
+
             req.user = {
-                tgid: Number(user.telegram_id),
-                id: Number(user.id),
-                role: Number(user.role),
+                tgid: user["user.telegram_id"],
+                id: user.id,
+                user_id: user["user.id"],
+                role: Number(user["user.role"]),
             }
 
             next()
@@ -63,9 +66,10 @@ class UsersController{
         } = req;
 
         const token = sign({
-            tgid: Number(user.telegram_id),
-            id: Number(user.id),
-            role: Number(user.role), 
+                tgid: user["user.telegram_id"],
+                id: user.id,
+                user_id: user["user.id"],
+                role: Number(user["user.role"]),
         }, configs.JWT_KEY)
 
         res.status(200).json({
@@ -84,6 +88,40 @@ class UsersController{
 
             const newUser = await users.create({
                 ...body
+            })
+
+            res.status(200).json({
+                ok: true,
+                data: {
+                    user: newUser
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async CreateMosqueAdmin(req, res, next){
+        try {
+            const {body} = req
+
+            const user = await mosque_admins.findOne({
+                where: {
+                    username: body.username
+                }
+            })
+
+            if (user) {
+                res.status(400).json({
+                    ok: false,
+                    message: "This username is busy!"
+                })
+                return
+            }
+
+            const newUser = await mosque_admins.create({
+                username: body.username,
+                password: createCrypt(body.password)
             })
 
             res.status(200).json({
@@ -127,71 +165,6 @@ class UsersController{
         }
     }
 
-    static async GetAllMosqueAdmins(req, res, next) {
-        try {
-            const { query } = req
-
-            const limit = query.limit || 20
-            const page = query.page - 1 || 0
-            const offset = page * limit
-
-            const allUsers = await users.findAndCountAll({
-                limit: limit,
-                offset: offset,
-                where: {
-                    role: 2
-                },
-                include: [
-                    {
-                        model: mosque_admins,
-                        attributes: ["username"],
-                        include: [{
-                            model: mosques
-                        }]
-                    }
-                ]
-            })
-
-            res.status(200).json({
-                ok: true,
-                data: {
-                    users: allUsers.rows,
-                    count: allUsers.count
-                }
-            })
-        } catch (error) {
-            next(error)
-        }
-    }
-
-    static async GetAllSuperAdmins(req, res, next) {
-        try {
-            const { query } = req
-
-            const limit = query.limit || 20
-            const page = query.page - 1 || 0
-            const offset = page * limit
-
-            const allUsers = await users.findAndCountAll({
-                limit: limit,
-                offset: offset,
-                where: {
-                    role: 1
-                }
-            })
-
-            res.status(200).json({
-                ok: true,
-                data: {
-                    users: allUsers.rows,
-                    count: allUsers.count
-                }
-            })
-        } catch (error) {
-            next(error)
-        }
-    }
-
     static async GetAll(req, res, next) {
         try {
             const { query } = req
@@ -199,13 +172,30 @@ class UsersController{
             const limit = query.limit || 20
             const page = query.page - 1 || 0
             const offset = page * limit
+            const role = query.role
 
+            const filter = {}
+            let _include = []
+            
+            if (role) {
+                filter.role = Number(role)
+                
+                if (role == 2) {
+                    _include.push({
+                        model: mosque_admins,
+                        attributes: ["username"],
+                        include: [{
+                            model: mosques
+                        }]
+                    })
+                }
+            }
+            
             const allUsers = await users.findAndCountAll({
                 limit: limit,
                 offset: offset,
-                where: {
-                    role: {[Op.ne]: 2}
-                }
+                where: filter,
+                include: _include
             })
 
             res.status(200).json({
@@ -223,7 +213,6 @@ class UsersController{
     static async GetOne(req, res, next) {
         try {
             const { params } = req
-            console.log(params);
 
             const user = await users.findOne({
                 where: {
@@ -239,6 +228,35 @@ class UsersController{
                     })
                     return
                 }
+            }
+
+            res.status(200).json({
+                ok: true,
+                data: {
+                    user
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async GetMosqueAdmin(req, res, next) {
+        try {
+            const { params } = req
+
+            const user = await mosque_admins.findOne({
+                where: {
+                    username: params.username
+                }
+            })
+
+            if (!user) {
+                res.status(400).json({
+                    ok: fasle,
+                    message: "Not found"
+                })
+                return
             }
 
             res.status(200).json({
