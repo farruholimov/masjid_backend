@@ -1,5 +1,5 @@
 const sequelize = require("../db/db")
-const { mosques, mosque_admins, users, categories, ads } = sequelize.models
+const { mosques, mosque_admins, users, categories, ads, user_categories } = sequelize.models
 
 class AdsController{
     static async Create(req, res, next) {
@@ -77,17 +77,14 @@ class AdsController{
             const user = query.user
             const mosque = query.mosque
 
-            let filter, categoryFilter, mosqueInclude = {}
+            let filter = {}, categoryFilter = {}, categoriesRequired = true
 
             if (user) {
                 categoryFilter.user_id = user
-                mosqueInclude = {
-                    model: mosques,
-                    attributes: ["name", "id"]
-                }
             }
             if (mosque) {
                 filter.mosque_id = mosque
+                categoriesRequired = false
             }
 
             const allAds = await ads.findAndCountAll({
@@ -96,11 +93,17 @@ class AdsController{
                 where: filter,
                 include: [{
                     model: categories,
-                    required: false,
-                    attributes: ["name"],
-                    where: categoryFilter,
+                    attributes: ["name", "id"],
+                    include: [{
+                        model: user_categories,
+                        required: categoriesRequired,
+                        where: categoryFilter,
+                    }]
                 },
-                mosqueInclude
+                {
+                    model: mosques,
+                    attributes: ["name", "id"]
+                }
             ]
             })
 
