@@ -74,13 +74,17 @@ class AdsController{
             const limit = query.limit || 20
             const page = query.page - 1 || 0
             const offset = page * limit
-            const category = query.category
+            const user = query.user
             const mosque = query.mosque
 
-            let filter = {}
+            let filter, categoryFilter, mosqueInclude = {}
 
-            if (category) {
-                filter.category_id = category
+            if (user) {
+                categoryFilter.user_id = user
+                mosqueInclude = {
+                    model: mosques,
+                    attributes: ["name", "id"]
+                }
             }
             if (mosque) {
                 filter.mosque_id = mosque
@@ -92,11 +96,12 @@ class AdsController{
                 where: filter,
                 include: [{
                     model: categories,
-                    attributes: ["name"]
-                },{
-                    model: mosques,
-                    attributes: ["name", "id"]
-                }]
+                    required: false,
+                    attributes: ["name"],
+                    where: categoryFilter,
+                },
+                mosqueInclude
+            ]
             })
 
             res.status(200).json({
