@@ -2,18 +2,43 @@ const configs = require("../config");
 const { createCrypt } = require("../modules/bcrypt");
 const sequelize = require("./db");
 
-const { users, admin_users, categories } = sequelize.models
+const { users, admin_users, categories, mosques } = sequelize.models
 
 module.exports.init = async function() {
 
     let cats = [
         "sednekje","doinewdkcjecne","ondwedmeokd","kajdnwekjd","skindckewjdenoj"
     ]
+    let mos = [
+        {
+            name: "Masjid 1",
+            phone: "8468468468",
+            location: "dcjndindoimeoi"
+        },
+        {
+            name: "Masjid 2",
+            phone: "8468468468",
+            location: "dcjndindoimeoi"
+        },
+        {
+            name: "Masjid 3",
+            phone: "8468468468",
+            location: "dcjndindoimeoi"
+        }
+    ]
 
     if (await categories.count()==0) {
         for (const cat of cats) {
             await categories.create({
                 name: cat
+            })
+        }
+    }
+
+    if (await mosques.count()==0) {
+        for (const m of mos) {
+            await mosques.create({
+                ...m
             })
         }
     }

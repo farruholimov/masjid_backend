@@ -1,3 +1,4 @@
+const { Sequelize } = require("sequelize/types")
 const sequelize = require("../db/db")
 const { mosques, mosque_admins, users, categories, ads } = sequelize.models
 
@@ -5,6 +6,21 @@ class MosquesController{
     static async Create(req, res, next) {
         try {
             const { body } = req
+
+            const mosque = await mosques.findOne({
+                where: {
+                    name: body.name
+                },
+                raw: true
+            })
+
+            if (mosque) {
+                res.status(400).json({
+                    ok: false,
+                    message: "Mosque alredy exists"
+                })
+                return
+            }
 
             const newMosque = await mosques.create({
                 ...body
@@ -93,12 +109,20 @@ class MosquesController{
     }
     static async GetOne(req, res, next) {
         try {
-            const { params } = req
+            const { params, query } = req
+
+            let filter = {
+                id: params.id
+            }
+
+            if (query.byname == true) {
+                filter = {
+                    name: params.id
+                }
+            }
 
             const mosque = await mosques.findOne({
-                where: {
-                    id: params.id
-                },
+                where: filter,
                 include: [
                     {
                         model: mosque_admins,
@@ -107,9 +131,10 @@ class MosquesController{
                             model: users
                         }]
                     },{
-                        model: ads
-                    },{
-                        model: categories
+                        model: ads,
+                        include: [{
+                            model: categories
+                        }]
                     }
                 ]
             })
@@ -137,7 +162,20 @@ class MosquesController{
         try {
             const { query } = req
 
-            const allMosques = await mosques.findAndCountAll()
+            const allMosques = await mosques.findAll({
+                attributes: {
+                    include: [
+                        [Sequelize.fn("COUNT"), Sequelize.col("ads.id"), "ads"]
+                    ]
+                },
+                include: [{
+                    model: ads,
+                    attributes: [],
+                    required: false
+                }],
+                raw: true,
+                subQuery: false
+            })
 
             res.status(200).json({
                 ok: true,

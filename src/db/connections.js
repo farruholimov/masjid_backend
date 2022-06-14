@@ -9,13 +9,16 @@ module.exports = (sequelize) => {
     
     categories.hasMany(ads, { foreignKey: "category_id" });
     ads.belongsTo(categories, { foreignKey: "category_id", allowNull: false });
+    
+    mosques.hasMany(ads, { foreignKey: "mosque_id" });
+    ads.belongsTo(mosques, { foreignKey: "mosque_id", allowNull: false });
 
     users.hasMany(admin_users, { foreignKey: "user_id" });
     admin_users.belongsTo(users, { foreignKey: "user_id", allowNull: false });
 
-    users.hasMany(mosque_admins, { foreignKey: "user_id" });
-    mosque_admins.belongsTo(users, { foreignKey: "user_id" });
+    users.hasOne(mosque_admins, { foreignKey: "user_id" });
+    mosque_admins.belongsTo(users, { foreignKey: "user_id", allowNull: false });
 
-    mosques.hasMany(mosque_admins, { foreignKey: "user_id" });
-    mosque_admins.belongsTo(mosques, { foreignKey: "user_id" });
+    mosques.hasOne(mosque_admins, { foreignKey: "user_id" });
+    mosque_admins.belongsTo(mosques, { foreignKey: "user_id", allowNull: false });
 }

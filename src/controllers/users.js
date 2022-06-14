@@ -165,6 +165,36 @@ class UsersController{
         }
     }
 
+    static async UpdateMosqueAdmin(req, res, next) {
+        try {
+            const {body, params} = req
+
+            const updated = await mosque_admins.update({
+                ...body
+            }, {
+                where:{
+                    user_id: params.id
+                }
+            })
+
+            if (!updated[0]) {
+                res.status(400).json({
+                    ok: false,
+                    message: "Failed to update"
+                })
+                return
+            }
+
+            res.status(200).json({
+                ok: true,
+                message: "User verified"
+            })
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+    }
+
     static async GetAll(req, res, next) {
         try {
             const { query } = req
@@ -243,12 +273,26 @@ class UsersController{
 
     static async GetMosqueAdmin(req, res, next) {
         try {
-            const { params } = req
+            const { query, params } = req
+
+            let filter = {
+                id: params.id
+            }
+
+            if (query.bymosque == true) {
+                filter = {
+                    mosque_id: params.id
+                }
+            }
+
+            if (query.byusername == true) {
+                filter = {
+                    username: params.id
+                }
+            }
 
             const user = await mosque_admins.findOne({
-                where: {
-                    username: params.username
-                }
+                where: filter
             })
 
             if (!user) {
@@ -277,7 +321,10 @@ class UsersController{
             const user = await users.findOne({
                 where: {
                     telegram_id: params.id
-                }
+                },
+                include: [{
+                    model: mosque_admins
+                }]
             })
 
             if (!user) {

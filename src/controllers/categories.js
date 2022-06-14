@@ -81,8 +81,8 @@ class CategoriesController{
                 offset: offset,
                 attributes: {
                     include: [
-                        [Sequelize.fn('COUNT', Sequelize.col('ads.id')), 'ads']
-                        [Sequelize.fn('COUNT', Sequelize.col('users.id')), 'users']
+                        [Sequelize.fn('COUNT', Sequelize.col('ads.id')), 'ads'],
+                        [Sequelize.fn('COUNT', Sequelize.col('user_categories.id')), 'users']
                     ]
                 }, 
                 include: [
@@ -97,7 +97,9 @@ class CategoriesController{
                         attributes: []
                     }
                 ],
-                group: ["categories.id"]
+                group: ["categories.id"],
+                raw: true,
+                subQuery: false
             })
 
             res.status(200).json({

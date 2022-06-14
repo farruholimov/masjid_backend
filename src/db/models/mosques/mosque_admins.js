@@ -21,12 +21,15 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         password: {
-          type: DataTypes.STRING(64),
-          allowNull: false
+          type: DataTypes.STRING(64)
+        },
+        verified: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: false
         },
         username: {
           type: DataTypes.STRING(64),
-          allowNull: false,
           unique: true
         }
       }, {
