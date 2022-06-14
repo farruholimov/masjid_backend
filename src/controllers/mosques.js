@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize/types")
+const { Sequelize } = require("sequelize")
 const sequelize = require("../db/db")
 const { mosques, mosque_admins, users, categories, ads } = sequelize.models
 
