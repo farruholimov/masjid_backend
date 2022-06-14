@@ -89,7 +89,14 @@ class AdsController{
             const allAds = await ads.findAndCountAll({
                 limit: limit,
                 offset: offset,
-                where: filter
+                where: filter,
+                include: [{
+                    model: categories,
+                    attributes: ["name"]
+                },{
+                    model: mosques,
+                    attributes: ["name", "id"]
+                }]
             })
 
             res.status(200).json({
