@@ -5,7 +5,7 @@ const MosquesRouter = require("express").Router()
 
 MosquesRouter.get("/", GetAll)
 MosquesRouter.get("/tg", GetAllTg)
-MosquesRouter.get("/:id", GetOne)
+MosquesRouter.get("/:finder", GetOne)
 MosquesRouter.post("/", protect, Create)
 MosquesRouter.put("/:id", protect, Update)
 MosquesRouter.delete("/:id", protect, Delete)

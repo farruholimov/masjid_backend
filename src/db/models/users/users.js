@@ -25,6 +25,11 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
           defaultValue: "idle"
         },
+        adstep: {
+          type: DataTypes.STRING(32),
+          allowNull: false,
+          defaultValue: "idle"
+        },
       }, {
         updatedAt: 'updated_at',
         createdAt: 'created_at'

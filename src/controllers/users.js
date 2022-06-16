@@ -5,6 +5,8 @@ const sequelize = require("../db/db")
 const { compareCrypt, createCrypt } = require("../modules/bcrypt")
 const { users, admin_users, mosque_admins, mosques } = sequelize.models
 
+const { default: fetch } = require("node-fetch")
+
 class UsersController{
 
     static async Login(req, res, next) {
@@ -105,23 +107,8 @@ class UsersController{
         try {
             const {body} = req
 
-            const user = await mosque_admins.findOne({
-                where: {
-                    username: body.username
-                }
-            })
-
-            if (user) {
-                res.status(400).json({
-                    ok: false,
-                    message: "This username is busy!"
-                })
-                return
-            }
-
             const newUser = await mosque_admins.create({
-                username: body.username,
-                password: createCrypt(body.password)
+                ...body
             })
 
             res.status(200).json({
@@ -169,6 +156,38 @@ class UsersController{
         try {
             const {body, params} = req
 
+            const user = await users.findOne({
+                where: {
+                    id: params.id
+                },
+                attributes: ["telegram_id"],
+                raw: true
+            })
+
+            if (!user) {
+                res.status(400).json({
+                    ok: false,
+                    message: "Not found"
+                })
+                return
+            }
+
+            if (body.username) {
+                const mad = await mosque_admins.findOne({
+                    where: {
+                        username: body.username
+                    }
+                })
+
+                if (mad) {
+                    res.status(400).json({
+                        ok: false,
+                        message: "This username is busy!"
+                    })
+                    return
+                }
+            }
+
             const updated = await mosque_admins.update({
                 ...body
             }, {
@@ -176,6 +195,33 @@ class UsersController{
                     user_id: params.id
                 }
             })
+
+            console.log(body.verified != undefined);
+            if (body.verified != undefined) {
+                await users.update({
+                    adstep: "menu"
+                }, {
+                    where:{
+                        id: params.id
+                    }
+                })
+                let validtext = "Siz administratorlar tasdiqidan o'tdingiz. Iltimos /start buyrug'ini qayta jo'nating."
+                let invalidtext = "Siz tasdiqlanmadingiz! Savollar bilan @admin ga murojaat qilishingiz mumkin."
+                let keyboard = JSON.stringify(
+                    {inline_keyboard: [
+                        [ { text: 'Masjidlar', web_app: { url: 'https://mosque-bot.vercel.app/' } } ],
+                        [
+                          { text: "E'lonlar", callback_data: 'all_ads' },
+                          { text: 'Sozlamalar', callback_data: 'settings' }
+                        ]
+                    ]}
+                )
+                if (body.verified == true) {
+                    await fetch(`https://api.telegram.org/bot${configs.BOT_CLIENT_TOKEN}/sendMessage?chat_id=${user.telegram_id}&text=${validtext}&parse_mode=html`)
+                } else {
+                    await fetch(`https://api.telegram.org/bot${configs.BOT_CLIENT_TOKEN}/sendMessage?chat_id=${user.telegram_id}&text=${invalidtext}&parse_mode=html`)
+                }
+            }
 
             if (!updated[0]) {
                 res.status(400).json({
@@ -187,7 +233,7 @@ class UsersController{
 
             res.status(200).json({
                 ok: true,
-                message: "User verified"
+                message: "Admin updated"
             })
         } catch (error) {
             console.log(error);

@@ -112,12 +112,12 @@ class MosquesController{
             const { params, query } = req
 
             let filter = {
-                id: params.id
+                id: params.finder
             }
-
-            if (query.byname == true) {
+            
+            if (JSON.parse(query.byname) == true) {
                 filter = {
-                    name: params.id
+                    name: params.finder
                 }
             }
 
@@ -165,7 +165,7 @@ class MosquesController{
             const allMosques = await mosques.findAll({
                 attributes: {
                     include: [
-                        [Sequelize.fn("COUNT"), Sequelize.col("ads.id"), "ads"]
+                        [Sequelize.fn("COUNT", Sequelize.col("ads.id")), "ads"]
                     ]
                 },
                 include: [{
@@ -173,6 +173,7 @@ class MosquesController{
                     attributes: [],
                     required: false
                 }],
+                group: ["mosques.id"],
                 raw: true,
                 subQuery: false
             })
