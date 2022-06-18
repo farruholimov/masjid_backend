@@ -326,9 +326,15 @@ class UsersController{
                 }
             }
 
-            if (query.byusername == true) {
+            else if (query.byusername == true) {
                 filter = {
                     username: params.id
+                }
+            }
+
+            else if (query.byuser == true) {
+                filter = {
+                    user_id: params.id
                 }
             }
 
