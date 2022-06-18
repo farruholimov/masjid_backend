@@ -77,6 +77,7 @@ class AdsController{
             const offset = page * limit
             const user = query.user
             const mosque = query.mosque
+            const category = query.category
 
             let filter = {}, group = ["ads.id", "requests.id", "category.id", "mosque.id"]
 
@@ -109,13 +110,14 @@ class AdsController{
                 }],
                 group.push("category->user_categories.id")
             }
+            else if(category){
+                filter.category_id = category
+            }
             else if (mosque) {
                 filter.mosque_id = mosque
             }
 
             const allAds = await ads.findAndCountAll({
-                limit,
-                offset,
                 where: filter,
                 attributes: {
                     include: [
