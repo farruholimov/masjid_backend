@@ -172,7 +172,7 @@ class UsersController{
                 return
             }
 
-            if (body.username) {
+            if (body.username != undefined) {
                 const mad = await mosque_admins.findOne({
                     where: {
                         username: body.username
@@ -196,7 +196,6 @@ class UsersController{
                 }
             })
 
-            console.log(body.verified != undefined);
             if (body.verified != undefined) {
                 await users.update({
                     adstep: "menu"
@@ -216,11 +215,7 @@ class UsersController{
                         ]
                     ]}
                 )
-                if (body.verified == true) {
-                    await fetch(`https://api.telegram.org/bot${configs.BOT_CLIENT_TOKEN}/sendMessage?chat_id=${user.telegram_id}&text=${validtext}&parse_mode=html`)
-                } else {
-                    await fetch(`https://api.telegram.org/bot${configs.BOT_CLIENT_TOKEN}/sendMessage?chat_id=${user.telegram_id}&text=${invalidtext}&parse_mode=html`)
-                }
+                await fetch(`https://api.telegram.org/bot${configs.BOT_CLIENT_TOKEN}/sendMessage?chat_id=${user.telegram_id}&text=${body.verified ? validtext : invalidtext}&parse_mode=html`)
             }
 
             if (!updated[0]) {

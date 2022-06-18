@@ -1,5 +1,5 @@
 module.exports = (sequelize) => {
-    const { users, admin_users, categories, ads, user_categories, mosques, mosque_admins } = sequelize.models
+    const { users, admin_users, categories, ads, user_categories, mosques, mosque_admins, requests } = sequelize.models
 
     categories.hasMany(categories, {foreignKey: "parent_id", as: "children", allowNull: true})
 
@@ -23,4 +23,10 @@ module.exports = (sequelize) => {
 
     mosques.hasOne(mosque_admins, { foreignKey: "user_id" });
     mosque_admins.belongsTo(mosques, { foreignKey: "user_id", allowNull: false });
+
+    users.hasMany(requests, { foreignKey: "user_id" });
+    requests.belongsTo(users, { foreignKey: "user_id", allowNull: false });
+
+    ads.hasMany(requests, { foreignKey: "ad_id" });
+    requests.belongsTo(ads, { foreignKey: "ad_id", allowNull: false });
 }

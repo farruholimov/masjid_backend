@@ -11,6 +11,7 @@ const modelDefiners = [
     require('./models/mosques/mosques'),
     require('./models/mosques/mosque_admins'),
     require('./models/ads/ads'),
+    require('./models/ads/requests'),
 ]
 
 const sequelize = new Sequelize(configs.DB_CONNECTION_URL, {
