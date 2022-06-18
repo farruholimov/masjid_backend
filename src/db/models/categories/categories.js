@@ -6,6 +6,13 @@ module.exports = async (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true,
         },
+        parent_id: {
+            type: DataTypes.INTEGER,
+            references: {
+              model: "categories",
+              key: "id"
+            },  
+          },
         name: {
             type: DataTypes.STRING(164),
             allowNull: false

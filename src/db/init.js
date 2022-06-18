@@ -7,7 +7,20 @@ const { users, admin_users, categories, mosques } = sequelize.models
 module.exports.init = async function() {
 
     let cats = [
-        "sednekje","doinewdkcjecne","ondwedmeokd","kajdnwekjd","skindckewjdenoj"
+        {
+            name: "Qurilish"
+        },
+        {
+            name: "Ko'chat"
+        },
+        {
+            name: "Maishiy yordam",
+            parent_id: 1
+        },
+        {
+            name: "Moddiy yordam",
+            parent_id: 1
+        }
     ]
     let mos = [
         {
@@ -30,7 +43,8 @@ module.exports.init = async function() {
     if (await categories.count()==0) {
         for (const cat of cats) {
             await categories.create({
-                name: cat
+                name: cat.name,
+                parent_id: cat.parent_id
             })
         }
     }

@@ -76,13 +76,11 @@ class CategoriesController{
             const page = query.page - 1 || 0
             const offset = page * limit
 
-            const allCategories = await categories.findAndCountAll({
-                limit: limit,
-                offset: offset,
+            const allCategories = await categories.findAll({
                 attributes: {
                     include: [
-                        [Sequelize.fn('COUNT', Sequelize.col('ads.id')), 'ads'],
-                        [Sequelize.fn('COUNT', Sequelize.col('user_categories.id')), 'users']
+                        [Sequelize.fn('COUNT', Sequelize.col('user_categories.id')), 'users_count'],
+                        [Sequelize.fn('COUNT', Sequelize.col('ads.id')), 'ads_count']
                     ]
                 }, 
                 include: [
@@ -95,18 +93,22 @@ class CategoriesController{
                         model: user_categories,
                         required: false,
                         attributes: []
+                    },
+                    {
+                        model: categories,
+                        as: "children",
+                        attributes: ["id", "name"],
                     }
                 ],
-                group: ["categories.id"],
-                raw: true,
+                group: ["categories.id", "children.id"],
+                nest: true,
                 subQuery: false
             })
 
             res.status(200).json({
                 ok: true,
                 data: {
-                    categories: allCategories.rows,
-                    count: allCategories.count
+                    categories: allCategories,
                 }
             })
         } catch (error) {

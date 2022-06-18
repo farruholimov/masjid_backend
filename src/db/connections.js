@@ -1,6 +1,8 @@
 module.exports = (sequelize) => {
     const { users, admin_users, categories, ads, user_categories, mosques, mosque_admins } = sequelize.models
 
+    categories.hasMany(categories, {foreignKey: "parent_id", as: "children", allowNull: true})
+
     categories.hasMany(user_categories, { foreignKey: "category_id" });
     user_categories.belongsTo(categories, { foreignKey: "category_id", allowNull: false });
 
