@@ -149,7 +149,7 @@ class CategoriesController{
 
             if (!category) {
                 res.status(400).json({
-                    ok: fasle,
+                    ok: false,
                     message: "Not found"
                 })
                 return
@@ -226,7 +226,7 @@ class CategoriesController{
 
             if (!category) {
                 res.status(400).json({
-                    ok: fasle,
+                    ok: false,
                     message: "Not found"
                 })
                 return

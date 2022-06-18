@@ -294,7 +294,7 @@ class UsersController{
             if (!user) {
                 if (!user) {
                     res.status(400).json({
-                        ok: fasle,
+                        ok: false,
                         message: "Not found"
                     })
                     return
@@ -344,7 +344,7 @@ class UsersController{
 
             if (!user) {
                 res.status(400).json({
-                    ok: fasle,
+                    ok: false,
                     message: "Not found"
                 })
                 return
@@ -376,7 +376,7 @@ class UsersController{
 
             if (!user) {
                 res.status(400).json({
-                    ok: fasle,
+                    ok: false,
                     message: "Not found"
                 })
                 return

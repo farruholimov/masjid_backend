@@ -130,7 +130,7 @@ class ReqsController{
 
             if (!request) {
                 res.status(400).json({
-                    ok: fasle,
+                    ok: false,
                     message: "Not found"
                 })
                 return
