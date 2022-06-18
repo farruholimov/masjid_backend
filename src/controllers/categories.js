@@ -77,6 +77,9 @@ class CategoriesController{
             const offset = page * limit
 
             const allCategories = await categories.findAll({
+                where: {
+                    parent_id: null,
+                },
                 attributes: {
                     include: [
                         [Sequelize.fn('COUNT', Sequelize.col('user_categories.id')), 'users_count'],
