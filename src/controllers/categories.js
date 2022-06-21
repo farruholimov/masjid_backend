@@ -128,7 +128,7 @@ class CategoriesController{
                 },
                 attributes: {
                     include: [
-                        [Sequelize.fn('COUNT', Sequelize.col('ads.id')), 'ads']
+                        [Sequelize.fn('COUNT', Sequelize.col('ads.id')), 'ads'],
                         [Sequelize.fn('COUNT', Sequelize.col('users.id')), 'users']
                     ]
                 }, 
