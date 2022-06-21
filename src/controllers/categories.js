@@ -145,6 +145,7 @@ class CategoriesController{
                     },
                     {
                         model: categories,
+                        as: "children",
                         required: false
                     }
                 ],
