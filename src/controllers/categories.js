@@ -149,7 +149,7 @@ class CategoriesController{
                         required: false
                     }
                 ],
-                group: ["categories.id"]
+                group: ["categories.id", "children.id"]
             })
 
             if (!category) {
