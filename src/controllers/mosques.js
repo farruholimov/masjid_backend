@@ -115,7 +115,7 @@ class MosquesController{
                 id: params.finder
             }
             
-            if (JSON.parse(query.byname) == true) {
+            if (query.byname != undefined && JSON.parse(query.byname)) {
                 filter = {
                     name: params.finder
                 }
