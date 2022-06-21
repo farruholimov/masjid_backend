@@ -62,6 +62,61 @@ class UsersController{
         }
     }
 
+    static async LoginMA(req, res, next) {
+        try {
+            const { body } = req
+
+            const user = await users.findOne({
+                where: {
+                    telegram_id: body.telegram_id
+                },
+                include: [
+                    {
+                        model: mosque_admins
+                    }
+                ],
+                raw: true
+            })
+
+            if (!user["mosque_admin"]) {
+                res.status(400).json({
+                    ok: false,
+                    message: "Not an admin!"
+                })
+                return
+            }
+
+            const mosque = await mosques.findOne({
+                where: {
+                    username: body.username
+                },
+                raw: true
+            })
+
+            if (!mosque) {
+                res.status(400).json({
+                    ok: false,
+                    message: "Mosque not found!"
+                })
+                return
+            }
+            if (!compareCrypt(body.password, mosque.password)) {
+                res.status(400).json({
+                    ok: false,
+                    message: "Incorrect username or password!"
+                })
+                return
+            }
+
+            res.status(200).json({
+                ok: true,
+                message: "Logged in"
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
     static async GenerateToken(req, res, next) {
         const {
             user,

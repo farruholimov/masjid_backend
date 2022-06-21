@@ -93,7 +93,10 @@ class MosquesController{
 
             const allMosques = await mosques.findAndCountAll({
                 limit: limit,
-                offset: offset
+                offset: offset,
+                attributes: {
+                    exclude: ["username", "password"]
+                }
             })
 
             res.status(200).json({
@@ -123,6 +126,9 @@ class MosquesController{
 
             const mosque = await mosques.findOne({
                 where: filter,
+                attributes: {
+                    exclude: ["username", "password"]
+                },
                 include: [
                     {
                         model: mosque_admins,

@@ -19,18 +19,6 @@ module.exports = (sequelize, DataTypes) => {
               model: "mosques",
               key: "id"
             }
-        },
-        password: {
-          type: DataTypes.STRING(64)
-        },
-        verified: {
-          type: DataTypes.BOOLEAN,
-          allowNull: false,
-          defaultValue: false
-        },
-        username: {
-          type: DataTypes.STRING(64),
-          unique: true
         }
       }, {
         updatedAt: 'updated_at',

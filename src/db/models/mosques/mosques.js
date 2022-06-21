@@ -16,6 +16,13 @@ module.exports = async (sequelize, DataTypes) => {
         },
         phone: {
             type: DataTypes.STRING(),
+        },
+        password: {
+          type: DataTypes.STRING(64)
+        },
+        username: {
+          type: DataTypes.STRING(64),
+          unique: true
         }
 
     }, {
