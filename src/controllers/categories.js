@@ -142,6 +142,10 @@ class CategoriesController{
                         model: user_categories,
                         required: false,
                         attributes: []
+                    },
+                    {
+                        model: categories,
+                        required: false
                     }
                 ],
                 group: ["categories.id"]
