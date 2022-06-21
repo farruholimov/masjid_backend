@@ -1,9 +1,10 @@
-const { GetAll, Login, GenerateToken, GetOne, Profile, Create, GetOneTg, Update, CreateMosqueAdmin, GetMosqueAdmin, UpdateMosqueAdmin } = require("../controllers/users")
+const { GetAll, Login, GenerateToken, GetOne, Profile, Create, GetOneTg, Update, CreateMosqueAdmin, GetMosqueAdmin, UpdateMosqueAdmin, LoginMA } = require("../controllers/users")
 const protect = require("../middlewares/auth/protect")
 
 const UsersRouter = require("express").Router()
 
 UsersRouter.post("/login", Login, GenerateToken)
+UsersRouter.post("/tg/login", LoginMA)
 UsersRouter.get("/", protect, GetAll)
 UsersRouter.post("/", Create)
 UsersRouter.put("/:id", Update)
