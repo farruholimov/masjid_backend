@@ -74,7 +74,7 @@ class AdsController{
 
             const limit = query.limit || 10000000000000000
             const page = query.page - 1 || 0
-            const offset = page * limit
+            const offset = page * Number(limit)
             const user = query.user
 
             let filter = {}, group = ["ads.id", "requests.id", "category.id", "mosque.id"]
@@ -119,7 +119,7 @@ class AdsController{
             }
 
             const allAds = await ads.findAndCountAll({
-                limit: limit,
+                limit: Number(limit),
                 offset: offset,
                 where: filter,
                 attributes: {
@@ -144,7 +144,7 @@ class AdsController{
                         pages: pagesCount,
                         current: page, 
                         next: nextPage,
-                        limit: limit
+                        limit: Number(limit)
                     }
                 }
             })
