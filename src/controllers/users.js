@@ -92,6 +92,15 @@ class UsersController{
                 })
                 return
             }
+            if (user["mosque_admin"]) {
+                if (user["mosque_admin.mosque_id"] != mosque.id) {
+                    res.status(400).json({
+                        ok: false,
+                        message: "Not mosque admin!"
+                    })
+                    return
+                }
+            }
             if (!compareCrypt(body.password, mosque.password)) {
                 res.status(400).json({
                     ok: false,
