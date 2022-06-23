@@ -72,7 +72,7 @@ class AdsController{
         try {
             const { query } = req
 
-            const limit = query.limit || 20
+            const limit = query.limit || 10000000000000000
             const page = query.page - 1 || 0
             const offset = page * limit
             const user = query.user
