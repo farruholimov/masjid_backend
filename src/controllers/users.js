@@ -74,9 +74,16 @@ class UsersController{
                     {
                         model: mosque_admins
                     }
-                ],
-                raw: true
+                ]
             })
+
+            if (!user) {
+                res.status(400).json({
+                    ok: false,
+                    message: "User not found!"
+                })
+                return
+            }
 
             const mosque = await mosques.findOne({
                 where: {
@@ -92,8 +99,8 @@ class UsersController{
                 })
                 return
             }
-            if (user["mosque_admin"]) {
-                if (user["mosque_admin.mosque_id"] != mosque.id) {
+            if (user.dataValues.mosque_admin) {
+                if (user.dataValues.mosque_admin.mosque_id != mosque.id) {
                     res.status(400).json({
                         ok: false,
                         message: "Not mosque admin!"
@@ -109,9 +116,9 @@ class UsersController{
                 return
             }
             console.log(user);
-            if (!user["mosque_admin"]) {
+            if (!user.dataValues.mosque_admin) {
                 await users.create({
-                    user_id: user.id,
+                    user_id: user.dataValues.id,
                     mosque_id: mosque.id
                 })
             }
