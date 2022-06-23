@@ -117,7 +117,7 @@ class UsersController{
             }
             console.log(user);
             if (!user.dataValues.mosque_admin) {
-                await users.create({
+                await mosque_admins.create({
                     user_id: user.dataValues.id,
                     mosque_id: mosque.id
                 })
