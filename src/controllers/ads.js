@@ -82,7 +82,7 @@ class AdsController{
             
 			 if(query && Object.keys(query).length){  
 				for (let key in query){
-					if(key != "user" && key != 'sortby'){
+					if(key != "user" && key != 'limit'&& key != 'page'){
 						filter[`${key}`] = query[key]
 					}
 				}
