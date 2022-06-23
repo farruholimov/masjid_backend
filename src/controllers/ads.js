@@ -79,7 +79,7 @@ class AdsController{
             const mosque = query.mosque
             const category = query.category
 
-            let filter = {}, group = ["ads.id", "requests.id", "category.id", "mosque.id"]
+            let filter = {status: 1}, group = ["ads.id", "requests.id", "category.id", "mosque.id"]
 
             let _include = [
                 {
@@ -115,6 +115,10 @@ class AdsController{
             }
             else if (mosque) {
                 filter.mosque_id = mosque
+            }
+
+            if (req.user) {
+                delete filter.status
             }
 
             const allAds = await ads.findAndCountAll({

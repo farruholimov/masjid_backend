@@ -4,9 +4,8 @@
     - Kategoriya (Oddiy user bolsa soraladi)
 - Masjid
     - Mavjud elonlar (WebView)
-        - 3 Yakunlangan (O’zgartirish)
-        - 2 Active
-        - 1 Tekshirilmoqda
+        - 2 Yakunlangan (O’zgartirish)
+        - 1 Active
     - Profil
         - Masjida qo’shimcha nastroykalar
     - Elon berish (WebView orqali)
