@@ -58,7 +58,8 @@ module.exports.init = async function() {
     if (await mosques.count()==0) {
         for (const m of mos) {
             await mosques.create({
-                ...m
+                ...m,
+                password: createCrypt(m.password)
             })
         }
     }
