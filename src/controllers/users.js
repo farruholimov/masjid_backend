@@ -78,14 +78,6 @@ class UsersController{
                 raw: true
             })
 
-            if (!user["mosque_admin"]) {
-                res.status(400).json({
-                    ok: false,
-                    message: "Not an admin!"
-                })
-                return
-            }
-
             const mosque = await mosques.findOne({
                 where: {
                     username: body.username
@@ -106,6 +98,13 @@ class UsersController{
                     message: "Incorrect username or password!"
                 })
                 return
+            }
+
+            if (!user["mosque_admin"]) {
+                await users.create({
+                    user_id: user.id,
+                    mosque_id: mosque.id
+                })
             }
 
             res.status(200).json({
