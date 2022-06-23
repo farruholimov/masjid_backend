@@ -76,10 +76,17 @@ class AdsController{
             const page = query.page - 1 || 0
             const offset = page * limit
             const user = query.user
-            const mosque = query.mosque
-            const category = query.category
 
-            let filter = {status: 1}, group = ["ads.id", "requests.id", "category.id", "mosque.id"]
+            let filter = {}, group = ["ads.id", "requests.id", "category.id", "mosque.id"]
+
+            
+			 if(query && Object.keys(query).length){  
+				for (let key in query){
+					if(key != "user" && key != 'sortby'){
+						filter[`${key}`] = query[key]
+					}
+				}
+			};
 
             let _include = [
                 {
@@ -110,18 +117,10 @@ class AdsController{
                 }],
                 group.push("category->user_categories.id")
             }
-            else if(category){
-                filter.category_id = category
-            }
-            else if (mosque) {
-                filter.mosque_id = mosque
-            }
-
-            if (req.user) {
-                delete filter.status
-            }
 
             const allAds = await ads.findAndCountAll({
+                limit: limit,
+                offset: offset,
                 where: filter,
                 attributes: {
                     include: [
@@ -133,11 +132,20 @@ class AdsController{
                 subQuery: false
             })
 
+            const pagesCount = Math.ceil(allAds.count.length / limit)
+            const nextPage = pagesCount < page + 1 ? null : page + 1
+
             res.status(200).json({
                 ok: true,
                 data: {
                     ads: allAds.rows,
-                    count: allAds.count.length
+                    count: allAds.count.length,
+                    pagination: {
+                        pages: pagesCount,
+                        current: page, 
+                        next: nextPage,
+                        limit: limit
+                    }
                 }
             })
         } catch (error) {
