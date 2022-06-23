@@ -65,7 +65,6 @@ class UsersController{
     static async LoginMA(req, res, next) {
         try {
             const { body } = req
-            console.log("BODY:", body);
 
             const user = await users.findOne({
                 where: {
@@ -93,7 +92,6 @@ class UsersController{
                 })
                 return
             }
-            console.log("MASJID:", mosque);
             if (!compareCrypt(body.password, mosque.password)) {
                 res.status(400).json({
                     ok: false,
