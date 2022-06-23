@@ -28,21 +28,21 @@ module.exports.init = async function() {
             phone: "8468468468",
             location: "dcjndindoimeoi",
             username: "masjid1",
-            location: "pass1"
+            password: "pass1"
         },
         {
             name: "Masjid 2",
             phone: "8468468468",
             location: "dcjndindoimeoi",
             username: "masjid2",
-            location: "pass2"
+            password: "pass2"
         },
         {
             name: "Masjid 3",
             phone: "8468468468",
             location: "dcjndindoimeoi",
             username: "masjid3",
-            location: "pass3"
+            password: "pass3"
         }
     ]
 
