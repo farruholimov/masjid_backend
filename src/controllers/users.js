@@ -108,7 +108,7 @@ class UsersController{
                 })
                 return
             }
-
+            console.log(user);
             if (!user["mosque_admin"]) {
                 await users.create({
                     user_id: user.id,
