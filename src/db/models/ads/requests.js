@@ -27,6 +27,11 @@ module.exports = async (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false
         },
+        exact: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        },
         status: {
             type: DataTypes.INTEGER,
             allowNull: false,

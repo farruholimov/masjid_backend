@@ -73,14 +73,17 @@ class ReqsController{
 
             const user = query.user
             const ad = query.ad
+            const exact = query.exact
 
             let filter = {}
-            if (user) {
-                filter.user_id = user
-            }
-            if (ad) {
-                filter.ad_id = ad
-            }
+
+            if(query && Object.keys(query).length){  
+				for (let key in query){
+					if(key != 'limit' && key != 'page'){
+						filter[`${key}`] = query[key]
+					}
+				}
+			};
 
             const allReqs = await requests.findAndCountAll({
                 where: filter,

@@ -1,3 +1,4 @@
+const { Op } = require("sequelize")
 const { Sequelize } = require("sequelize")
 const sequelize = require("../db/db")
 const { mosques, mosque_admins, users, categories, ads, user_categories, requests } = sequelize.models
@@ -102,7 +103,10 @@ class AdsController{
                     attributes: ["status", "amount"],
                     required: false,
                     where: {
-                        status: 2
+                        [Op.or]: [
+                            {status: 2},
+                            {exact: true}
+                        ]
                     }
                 }
             ]
