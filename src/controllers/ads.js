@@ -100,7 +100,7 @@ class AdsController{
                 },
                 {
                     model: requests,
-                    attributes: ["status", "amount"],
+                    attributes: ["status", "amount", "exact"],
                     required: false,
                     where: {
                         [Op.or]: [
