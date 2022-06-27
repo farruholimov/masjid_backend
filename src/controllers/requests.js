@@ -11,7 +11,15 @@ class ReqsController{
                 where: {
                     id: body.ad_id
                 },
-
+                attributes: ["id", "mosque_id"],
+                include: [{
+                    model: mosques,
+                    attributes: ["id"],
+                    include: [{
+                        model: mosque_admins,
+                        attributes: ["user_id"],
+                    }]
+                }],
                 raw: true
             })
 
