@@ -99,14 +99,17 @@ class UsersController{
                 })
                 return
             }
-            if (user.dataValues.mosque_admin) {
-                if (user.dataValues.mosque_admin.mosque_id != mosque.id) {
-                    res.status(400).json({
-                        ok: false,
-                        message: "Not mosque admin!"
-                    })
-                    return
+            const mu = await mosque_admins.findOne({
+                where: {
+                    mosque_id: mosque.id,
                 }
+            })
+            if (mu.user_id != user.id || user.dataValues.mosque_admin?.mosque_id != mosque.id) {
+                res.status(400).json({
+                    ok: false,
+                    message: "Not mosque admin!"
+                })
+                return
             }
             if (!compareCrypt(body.password, mosque.password)) {
                 res.status(400).json({
@@ -115,13 +118,14 @@ class UsersController{
                 })
                 return
             }
-            console.log(user);
-            if (!user.dataValues.mosque_admin) {
-                await mosque_admins.create({
-                    user_id: user.dataValues.id,
+
+            await mosque_admins.update({
+                user_id: user.dataValues.id
+            }, {
+                where: {
                     mosque_id: mosque.id
-                })
-            }
+                }
+            })
 
             res.status(200).json({
                 ok: true,

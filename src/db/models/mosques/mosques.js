@@ -1,3 +1,5 @@
+const _sequelize = require("../../db")
+
 module.exports = async (sequelize, DataTypes) => {
     const mosques = sequelize.define("mosques", {
         id: {
@@ -27,7 +29,14 @@ module.exports = async (sequelize, DataTypes) => {
 
     }, {
         updatedAt: 'updated_at',
-        createdAt: 'created_at'
+        createdAt: 'created_at',
+        hooks: {
+            afterCreate: async (mosque, options) => {
+                await _sequelize.models.mosque_admins.create({
+                    mosque_id: mosque.id,
+                })
+            }
+        }
       })
 
     return mosques
