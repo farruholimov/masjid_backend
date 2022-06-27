@@ -79,19 +79,40 @@ class AdsController{
             const user = query.user
 
             let filter = {}, group = ["ads.id", "requests.id", "category.id", "mosque.id"]
-
+            let categoryFilter = {}
+            let categoryRequired = false
             
 			 if(query && Object.keys(query).length){  
 				for (let key in query){
-					if(key != "user" && key != 'limit'&& key != 'page'){
+					if(key != "user" && key != 'limit'&& key != 'page' && key != 'category_id'){
 						filter[`${key}`] = query[key]
-					}
+					}else if(key == 'category_id'){
+                        const cat = await categories.findOne({
+                            where: {
+                                id: query[key]
+                            }
+                        })
+
+                        if (!cat.parent_id) {
+                            filter[`category_id`] = query[key]
+                        }else {
+                            categoryRequired = true
+                            categoryFilter = {
+                                [Op.or]: [
+                                    { category_id: query[key] },
+                                    { parent_id : query[key] }
+                                ]
+                            }
+                        }
+                    }
 				}
-			};
+            }
 
             let _include = [
                 {
                     model: categories,
+                    required: categoryRequired,
+                    where: categoryFilter,
                     attributes: ["name", "id"]
                 },
                 {
@@ -166,7 +187,7 @@ class AdsController{
                 },
                 attributes: {
                     include: [
-                        [Sequelize.fn("SUM", Sequelize.col('requests.amount')), "totalHelp"]
+                        [Sequelize.fn("SUM", Sequelize.col('requests.amount')), "total_help"]
                     ]
                 },
                 include: [
