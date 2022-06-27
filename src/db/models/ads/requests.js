@@ -14,7 +14,7 @@ module.exports = async (sequelize, DataTypes) => {
             }
         },
         user_id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             references: {
               model: "users",
               key: "id"
