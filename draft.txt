@@ -28,3 +28,10 @@
 1 - super admin
 2 - mosque admin
 3 - user
+
+notification belongs to:
+    1 - ads
+
+notification event:
+    1 - new request for mosque admin
+    2 - new response for user
