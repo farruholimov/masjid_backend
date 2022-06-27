@@ -104,7 +104,7 @@ class ReqsController{
             res.status(200).json({
                 ok: true,
                 data: {
-                    ads: allReqs.rows,
+                    requests: allReqs.rows,
                     count: allReqs.count
                 }
             })
