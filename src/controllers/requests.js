@@ -1,4 +1,5 @@
 const sequelize = require("../db/db")
+const { CreateNotification } = require("./notifications")
 const { mosques, mosque_admins, users, categories, ads, user_categories, requests } = sequelize.models
 
 class ReqsController{
@@ -6,9 +7,29 @@ class ReqsController{
         try {
             const { body } = req
 
+            const ad = await ads.findOne({
+                where: {
+                    id: body.ad_id
+                },
+                attributes: ["id"],
+                include: [{
+                    model: mosques,
+                    attributes: ["id"],
+                    include: [{
+                        model: mosque_admins,
+                        attributes: ["user_id"],
+                    }]
+                }],
+                raw: true
+            })
+
+            console.log("AD", ad);
+
             const newReq = await requests.create({
                 ...body
             })
+
+            await CreateNotification(1, newReq.id, 1, newReq.user_id, Array.isArray(ad["mosque.mosque_admins"]) ? ad["mosque.mosque_admins"][0].user_id : ad["mosque.mosque_admins.user_id"])
 
             res.status(200).json({
                 ok: true,
