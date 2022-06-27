@@ -10,7 +10,7 @@ const app = require("./src/server");
         })
         sequelize.query(
             `CREATE OR REPLACE FUNCTION trigger_madmin() RETURNS TRIGGER AS $$
-             BEGIN INSERT INTO mosque_admins (mosque_id) VALUES (NEW.id); 
+             BEGIN INSERT INTO mosque_admins (mosque_id, created_at, updated_at) VALUES (NEW.id, NOW(), NOW()); 
              RETURN NEW; 
              END; 
              $$ LANGUAGE plpgsql;`
