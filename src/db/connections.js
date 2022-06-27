@@ -1,5 +1,5 @@
 module.exports = (sequelize) => {
-    const { users, admin_users, categories, ads, user_categories, mosques, mosque_admins, requests } = sequelize.models
+    const { users, admin_users, categories, ads, user_categories, mosques, mosque_admins, requests, notifications, notification_objects } = sequelize.models
 
     categories.hasMany(categories, {foreignKey: "parent_id", as: "children", allowNull: true})
 
@@ -29,4 +29,42 @@ module.exports = (sequelize) => {
 
     ads.hasMany(requests, { foreignKey: "ad_id" });
     requests.belongsTo(ads, { foreignKey: "ad_id", allowNull: false });
+
+    // NOTIFICATIONS
+
+    notification_objects.hasMany(notifications, {
+        foreignKey: "notification_object_id",
+        allowNull: false,
+    })
+    notifications.belongsTo(notification_objects, {
+        foreignKey: "notification_object_id",
+        allowNull: false,
+    })
+
+    users.hasMany(notifications, {
+        foreignKey: "notifier_id",
+        allowNull: false,
+    })
+    notifications.belongsTo(users, {
+        foreignKey: "notifier_id",
+        allowNull: false,
+    })
+
+    users.hasMany(notification_objects, {
+        foreignKey: "actor_id",
+        allowNull: false,
+    })
+    notification_objects.belongsTo(users, {
+        foreignKey: "actor_id",
+        allowNull: false,
+    })
+
+    ads.hasMany(notification_objects, {
+        foreignKey: "entity_id",
+        allowNull: false,
+    })
+    notification_objects.belongsTo(ads, {
+        foreignKey: "entity_id",
+        allowNull: false,
+    })
 }
