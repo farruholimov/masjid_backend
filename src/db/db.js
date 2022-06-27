@@ -29,16 +29,4 @@ for (const m of modelDefiners) {
 
 connections(sequelize)
 
-sequelize.query(
-    `CREATE OR REPLACE FUNCTION trigger_madmin() RETURNS TRIGGER AS $$
-     BEGIN INSERT INTO mosque_admins (mosque_id) VALUES (NEW.id); 
-     RETURN NEW; 
-     END; 
-     $$ LANGUAGE plpgsql;`
-)
-
-sequelize.query(
-    `CREATE TRIGGER madmin_trigger AFTER INSERT ON mosques FOR EACH ROW EXECUTE PROCEDURE trigger_madmin();`
-)
-
 module.exports = sequelize;
