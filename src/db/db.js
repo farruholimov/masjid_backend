@@ -29,4 +29,10 @@ for (const m of modelDefiners) {
 
 connections(sequelize)
 
+sequelize.query('CREATE TRIGGER create_mosque_admin AFTER INSERT ON mosques' +
+  ' FOR EACH ROW' +
+  ' BEGIN' +
+  ' insert into mosque_admins (mosque_id) values(new.id);' +
+  'END;')
+
 module.exports = sequelize;
