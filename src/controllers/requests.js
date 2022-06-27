@@ -15,10 +15,10 @@ class ReqsController{
                 include: [{
                     model: mosques,
                     attributes: ["id"],
-                    // include: [{
-                    //     model: mosque_admins,
-                    //     attributes: ["user_id"],
-                    // }]
+                    include: [{
+                        model: mosque_admins,
+                        attributes: ["user_id"],
+                    }]
                 }],
                 raw: true
             })
