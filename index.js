@@ -17,7 +17,7 @@ const app = require("./src/server");
         )
         
         sequelize.query(
-            `CREATE TRIGGER madmin_trigger AFTER INSERT ON "mosques" FOR EACH ROW EXECUTE PROCEDURE trigger_madmin();`
+            `CREATE OR REPLACE TRIGGER madmin_trigger AFTER INSERT ON "mosques" FOR EACH ROW EXECUTE PROCEDURE trigger_madmin();`
         )
 
         await init()
