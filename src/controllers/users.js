@@ -242,56 +242,56 @@ class UsersController{
             if (!user) {
                 res.status(400).json({
                     ok: false,
-                    message: "Not found"
+                    message: "User not found"
                 })
                 return
-            }
+            } 
 
-            if (body.username != undefined) {
-                const mad = await mosque_admins.findOne({
-                    where: {
-                        username: body.username
-                    }
+            const mosque_admin = await mosque_admins.findOne({
+                where: {
+                    mosque_id: body.mosque_id
+                },
+                raw: true
+            })
+
+            if (mosque_admin.user_id) {
+                res.status(400).json({
+                    ok: false,
+                    message: "Mosque admin already exists"
                 })
-
-                if (mad) {
-                    res.status(400).json({
-                        ok: false,
-                        message: "This username is busy!"
-                    })
-                    return
-                }
-            }
+                return
+            } 
 
             const updated = await mosque_admins.update({
-                ...body
-            }, {
+                user_id: params.id
+            },
+                {
                 where:{
-                    user_id: params.id
+                    mosque_id: body.mosque_id
                 }
             })
 
-            if (body.verified != undefined) {
-                await users.update({
-                    adstep: "menu"
-                }, {
-                    where:{
-                        id: params.id
-                    }
-                })
-                let validtext = "Siz administratorlar tasdiqidan o'tdingiz. Iltimos /start buyrug'ini qayta jo'nating."
-                let invalidtext = "Siz tasdiqlanmadingiz! Savollar bilan @admin ga murojaat qilishingiz mumkin."
-                let keyboard = JSON.stringify(
-                    {inline_keyboard: [
-                        [ { text: 'Masjidlar', web_app: { url: 'https://mosque-bot.vercel.app/' } } ],
-                        [
-                          { text: "E'lonlar", callback_data: 'all_ads' },
-                          { text: 'Sozlamalar', callback_data: 'settings' }
-                        ]
-                    ]}
-                )
-                await fetch(`https://api.telegram.org/bot${configs.BOT_CLIENT_TOKEN}/sendMessage?chat_id=${user.telegram_id}&text=${body.verified ? validtext : invalidtext}&parse_mode=html`)
-            }
+            // if (body.verified != undefined) {
+            //     await users.update({
+            //         adstep: "menu"
+            //     }, {
+            //         where:{
+            //             id: params.id
+            //         }
+            //     })
+            //     let validtext = "Siz administratorlar tasdiqidan o'tdingiz. Iltimos /start buyrug'ini qayta jo'nating."
+            //     let invalidtext = "Siz tasdiqlanmadingiz! Savollar bilan @admin ga murojaat qilishingiz mumkin."
+            //     let keyboard = JSON.stringify(
+            //         {inline_keyboard: [
+            //             [ { text: 'Masjidlar', web_app: { url: 'https://mosque-bot.vercel.app/' } } ],
+            //             [
+            //               { text: "E'lonlar", callback_data: 'all_ads' },
+            //               { text: 'Sozlamalar', callback_data: 'settings' }
+            //             ]
+            //         ]}
+            //     )
+            //     await fetch(`https://api.telegram.org/bot${configs.BOT_CLIENT_TOKEN}/sendMessage?chat_id=${user.telegram_id}&text=${body.verified ? validtext : invalidtext}&parse_mode=html`)
+            // }
 
             if (!updated[0]) {
                 res.status(400).json({
