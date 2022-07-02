@@ -47,8 +47,6 @@ class UsersController{
                 return
             }
 
-            console.log(user);
-
             req.user = {
                 tgid: user["user.telegram_id"],
                 id: user.id,
@@ -142,12 +140,7 @@ class UsersController{
             user,
         } = req;
 
-        const token = sign({
-                tgid: user["user.telegram_id"],
-                id: user.id,
-                user_id: user["user.id"],
-                role: Number(user["user.role"]),
-        }, configs.JWT_KEY)
+        const token = sign({...user}, configs.JWT_KEY)
 
         res.status(200).json({
             ok: true,
