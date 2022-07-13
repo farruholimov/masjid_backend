@@ -99,7 +99,7 @@ class AdsController{
                             categoryRequired = true
                             categoryFilter = {
                                 [Op.or]: [
-                                    { category_id: query[key] },
+                                    { id: query[key] },
                                     { parent_id : query[key] }
                                 ]
                             }
