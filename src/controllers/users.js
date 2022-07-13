@@ -140,8 +140,13 @@ class UsersController{
             user,
         } = req;
 
-        const token = sign({...user}, configs.JWT_KEY)
-        console.log("TOKEN",user);
+        const token = sign({
+            tgid: user.tgid,
+            id: user.id,
+            user_id: user.user_id,
+            role: user.role,
+        }, configs.JWT_KEY)
+        // console.log("TOKEN",user);
         res.status(200).json({
             ok: true,
             message: "Logged in succesfully!",
