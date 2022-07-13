@@ -50,7 +50,7 @@ class UsersController{
             req.user = {
                 tgid: user["user.telegram_id"],
                 id: user.id,
-                user_id: user["user.id"],
+                user_id: String(user["user.id"]),
                 role: Number(user["user.role"]),
             }
 
