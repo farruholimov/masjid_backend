@@ -141,7 +141,7 @@ class UsersController{
         } = req;
 
         const token = sign({...user}, configs.JWT_KEY)
-        console.log("TOKEN",token);
+        console.log("TOKEN",user);
         res.status(200).json({
             ok: true,
             message: "Logged in succesfully!",
