@@ -143,7 +143,6 @@ class UsersController{
         const token = sign({
             tgid: user.tgid,
             id: user.id,
-            user_id: user.user_id,
             role: user.role,
         }, configs.JWT_KEY)
         // console.log("TOKEN",user);
