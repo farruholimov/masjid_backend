@@ -12,7 +12,7 @@ UsersRouter.get("/profile", protect, Profile)
 UsersRouter.get("/:id", protect, GetOne)
 UsersRouter.get("/tg/:id", GetOneTg)
 UsersRouter.post("/mosque-admin", CreateMosqueAdmin)
-UsersRouter.put("/mosque-admin/:id", protect, UpdateMosqueAdmin)
+UsersRouter.put("/mosque-admin/:mosque_id", protect, UpdateMosqueAdmin)
 UsersRouter.get("/mosque-admin/:id", GetMosqueAdmin)
 
 module.exports = UsersRouter

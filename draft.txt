@@ -35,3 +35,7 @@ notification belongs to:
 notification event:
     1 - new request for mosque admin
     2 - new response for user
+request statuses:
+    0 - cancelled
+    1 - sent
+    2 - finished

@@ -226,7 +226,7 @@ class UsersController{
 
             const user = await users.findOne({
                 where: {
-                    id: params.id
+                    id: body.user_id
                 },
                 attributes: ["telegram_id"],
                 raw: true
@@ -242,7 +242,7 @@ class UsersController{
 
             const mosque_admin = await mosque_admins.findOne({
                 where: {
-                    mosque_id: body.mosque_id
+                    mosque_id: params.mosque_id
                 },
                 raw: true
             })
@@ -256,11 +256,11 @@ class UsersController{
             } 
 
             const updated = await mosque_admins.update({
-                user_id: params.id
+                user_id: body.user_id
             },
                 {
                 where:{
-                    mosque_id: body.mosque_id
+                    mosque_id: params.mosque_id
                 }
             })
 
@@ -269,7 +269,7 @@ class UsersController{
             //         adstep: "menu"
             //     }, {
             //         where:{
-            //             id: params.id
+            //             id: body.user_id
             //         }
             //     })
             //     let validtext = "Siz administratorlar tasdiqidan o'tdingiz. Iltimos /start buyrug'ini qayta jo'nating."
