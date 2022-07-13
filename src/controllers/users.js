@@ -146,12 +146,6 @@ class UsersController{
             role: user.role,
         }, configs.JWT_KEY, {
             expiresIn: "3d"
-        },function(err, token) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log(token);
-            }
         })
         // console.log("TOKEN",user);
         res.status(200).json({
