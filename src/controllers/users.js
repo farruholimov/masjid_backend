@@ -144,9 +144,7 @@ class UsersController{
             tgid: user.tgid,
             id: user.id,
             role: user.role,
-        }, configs.JWT_KEY, {
-            expiresIn: "3d"
-        })
+        }, configs.JWT_KEY)
         // console.log("TOKEN",user);
         res.status(200).json({
             ok: true,
