@@ -1,12 +1,26 @@
-const { Op } = require("sequelize")
-const { Sequelize } = require("sequelize")
+const {
+    Op
+} = require("sequelize")
+const {
+    Sequelize
+} = require("sequelize")
 const sequelize = require("../db/db")
-const { mosques, mosque_admins, users, categories, ads, user_categories, requests } = sequelize.models
+const {
+    mosques,
+    mosque_admins,
+    users,
+    categories,
+    ads,
+    user_categories,
+    requests
+} = sequelize.models
 
-class AdsController{
+class AdsController {
     static async Create(req, res, next) {
         try {
-            const { body } = req
+            const {
+                body
+            } = req
 
             const newAd = await ads.create({
                 ...body
@@ -24,12 +38,15 @@ class AdsController{
     }
     static async Update(req, res, next) {
         try {
-            const { body, params } = req
+            const {
+                body,
+                params
+            } = req
 
             const updated = await ads.update({
                 ...body
             }, {
-                where:{
+                where: {
                     id: params.id
                 }
             })
@@ -52,10 +69,12 @@ class AdsController{
     }
     static async Delete(req, res, next) {
         try {
-            const { params } = req
+            const {
+                params
+            } = req
 
             await ads.destroy({
-                where:{
+                where: {
                     id: params.id
                 }
             })
@@ -71,22 +90,26 @@ class AdsController{
 
     static async GetAll(req, res, next) {
         try {
-            const { query } = req
+            const {
+                query
+            } = req
 
             const limit = query.limit || 10000000000000000
             const page = query.page - 1 || 0
             const offset = page * Number(limit)
             const user = query.user
 
-            let filter = {}, group = ["ads.id", "requests.id", "category.id", "mosque.id"]
+            let filter = {},
+                group = ["ads.id", "requests.id", "category.id", "mosque.id"]
             let categoryFilter = {}
             let categoryRequired = false
-            
-			 if(query && Object.keys(query).length){  
-				for (let key in query){
-					if(key != "user" && key != 'limit'&& key != 'page' && key != 'category_id'){
-						filter[`${key}`] = query[key]
-					}else if(key == 'category_id'){
+
+            if (query && Object.keys(query).length) {
+                for (let key in query) {
+                    if (key != "user" && key != 'limit' && key != 'page' && key != 'category_id' && key != 'range') {
+                        filter[`${key}`] = query[key]
+                    } 
+                    if (key == 'category_id') {
                         const cat = await categories.findOne({
                             where: {
                                 id: query[key]
@@ -95,21 +118,30 @@ class AdsController{
 
                         if (!cat.parent_id) {
                             filter[`category_id`] = query[key]
-                        }else {
+                        } else {
                             categoryRequired = true
                             categoryFilter = {
-                                [Op.or]: [
-                                    { id: query[key] },
-                                    { parent_id : query[key] }
+                                [Op.or]: [{
+                                        id: query[key]
+                                    },
+                                    {
+                                        parent_id: query[key]
+                                    }
                                 ]
                             }
                         }
+                    }  
+                    if (key == 'range') {
+                        const min = query[key].split('and')[0]
+                        const max = query[key].split('and')[1]
+                        filter[`amount`] = {
+                            [Op.between]: [min, max]
+                        }
                     }
-				}
+                }
             }
 
-            let _include = [
-                {
+            let _include = [{
                     model: categories,
                     required: categoryRequired,
                     where: categoryFilter,
@@ -124,23 +156,28 @@ class AdsController{
                     attributes: ["status", "amount", "exact"],
                     required: false,
                     where: {
-                        [Op.or]: [
-                            {status: 2},
-                            {exact: true}
+                        [Op.or]: [{
+                                status: 2
+                            },
+                            {
+                                exact: true
+                            }
                         ]
                     }
                 }
             ]
-            
+
             if (user) {
                 _include[0].required = true,
-                _include[0].include = [{
-                    model: user_categories,
-                    attributes: ["user_id"],
-                    required: true,
-                    where: {user_id: user},
-                }],
-                group.push("category->user_categories.id")
+                    _include[0].include = [{
+                        model: user_categories,
+                        attributes: ["user_id"],
+                        required: true,
+                        where: {
+                            user_id: user
+                        },
+                    }],
+                    group.push("category->user_categories.id")
             }
 
             const allAds = await ads.findAndCountAll({
@@ -167,7 +204,7 @@ class AdsController{
                     count: allAds.count.length,
                     pagination: {
                         pages: pagesCount,
-                        current: page, 
+                        current: page,
                         next: nextPage,
                         limit: Number(limit)
                     }
@@ -179,7 +216,9 @@ class AdsController{
     }
     static async GetOne(req, res, next) {
         try {
-            const { params } = req
+            const {
+                params
+            } = req
 
             const ad = await ads.findOne({
                 where: {
@@ -190,8 +229,7 @@ class AdsController{
                         [Sequelize.fn("SUM", Sequelize.col('requests.amount')), "total_help"]
                     ]
                 },
-                include: [
-                    {
+                include: [{
                         model: mosques
                     },
                     {
@@ -221,6 +259,25 @@ class AdsController{
                 ok: true,
                 data: {
                     ad
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async GetAmountRange(req, res, next) {
+        try {
+            const maxAmount = await sequelize.query(`SELECT MAX(amount) as max FROM ads`, {
+                type: sequelize.QueryTypes.SELECT
+            })
+            const minAmount = await sequelize.query(`SELECT MIN(amount) as min FROM ads`, {
+                type: sequelize.QueryTypes.SELECT
+            })
+
+            res.status(200).json({
+                ok: true,
+                data: {
+                    ad: newAd
                 }
             })
         } catch (error) {
