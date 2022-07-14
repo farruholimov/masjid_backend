@@ -224,6 +224,25 @@ class UsersController{
         }
     }
 
+    static async Delete(req, res, next) {
+        try {
+            const { params } = req
+
+            await users.destroy({
+                where:{
+                    id: params.id
+                }
+            })
+
+            res.status(200).json({
+                ok: true,
+                message: "User deleted"
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
     static async UpdateMosqueAdmin(req, res, next) {
         try {
             const {body, params} = req
