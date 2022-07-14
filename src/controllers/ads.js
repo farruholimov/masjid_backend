@@ -277,7 +277,8 @@ class AdsController {
             res.status(200).json({
                 ok: true,
                 data: {
-                    ad: newAd
+                    min: minAmount,
+                    max: maxAmount
                 }
             })
         } catch (error) {
