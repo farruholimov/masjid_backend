@@ -180,7 +180,7 @@ class AdsController {
             //         group.push("category->user_categories.id")
             // }
 
-            const allAds = await ads.findAll({
+            const allAds = await ads.findAndCountAll({
                 limit: Number(limit),
                 offset: offset,
                 where: filter,
