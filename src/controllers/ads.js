@@ -167,18 +167,18 @@ class AdsController {
                 }
             ]
 
-            if (user) {
-                _include[0].required = true,
-                    _include[0].include = [{
-                        model: user_categories,
-                        attributes: ["user_id"],
-                        required: true,
-                        where: {
-                            user_id: user
-                        },
-                    }],
-                    group.push("category->user_categories.id")
-            }
+            // if (user) {
+            //     _include[0].required = true,
+            //         _include[0].include = [{
+            //             model: user_categories,
+            //             attributes: ["user_id"],
+            //             required: true,
+            //             where: {
+            //                 user_id: user
+            //             },
+            //         }],
+            //         group.push("category->user_categories.id")
+            // }
 
             const allAds = await ads.findAll({
                 limit: Number(limit),
