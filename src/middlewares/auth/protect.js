@@ -26,7 +26,7 @@ const protect = async (req, res, next) => {
     if (!authToken) throw new res.error(401, "Please login in to get access")
 
     const decodedToken = verify(authToken, config.JWT_KEY);
-    console.log(decodedToken);
+
     if(!decodedToken) {
       res.status(400).json({
         ok: false,

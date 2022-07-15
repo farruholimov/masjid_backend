@@ -213,7 +213,7 @@ class AdsController {
                     count: allAds.count.length,
                     range: {
                         min: min[0].min,
-                        max: max[0].man
+                        max: max[0].max
                     },
                     pagination: {
                         pages: pagesCount,
