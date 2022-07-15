@@ -21,9 +21,10 @@ class Notifications {
 
     static async GetAll(req, res, next){
         try {
-            const { params } = req
+            const { params, query } = req
+            const { count } = query
             const { user_id } = params
-            const n = await notifications.findAll({
+            const n = await notifications.findAndCountAll({
                 where: {
                     notifier_id: user_id
                 },
@@ -34,10 +35,20 @@ class Notifications {
                     }]
                 }]
             })
+            if (count == true) {
+                res.status(200).json({
+                    ok: true,
+                    data: {
+                        count: n.count
+                    }
+                })
+                return
+            }
             res.status(200).json({
                 ok: true,
                 data: {
-                    notifications: n
+                    notifications: n.rows,
+                    count: n.count
                 }
             })
         } catch (error) {
