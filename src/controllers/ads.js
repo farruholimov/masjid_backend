@@ -195,11 +195,11 @@ class AdsController {
                 // logging: true
             })
 
-            const min = await sequelize.query(`SELECT MIN("ads"."amount") AS "min" FROM "ads" LEFT OUTER JOIN "categories" AS "category" ON "ads"."category_id" = "category"."id" ${category ? ` OR "category"."parent_id" = ${category}` : ""};`, {
+            const min = await sequelize.query(`SELECT MIN("ads"."amount") AS "min" FROM "ads" LEFT OUTER JOIN "categories" AS "category" ON "ads"."category_id" = "category"."id" ${category ? `WHERE "ads"."category_id" = ${category} OR "category"."parent_id" = ${category}` : ""};`, {
                 type: sequelize.QueryTypes.SELECT
             })
 
-            const max = await sequelize.query(`SELECT MAX("ads"."amount") AS "max" FROM "ads" LEFT OUTER JOIN "categories" AS "category" ON "ads"."category_id" = "category"."id" ${category ? ` OR "category"."parent_id" = ${category}` : ""};`, {
+            const max = await sequelize.query(`SELECT MAX("ads"."amount") AS "max" FROM "ads" LEFT OUTER JOIN "categories" AS "category" ON "ads"."category_id" = "category"."id" ${category ? `WHERE "ads"."category_id" = ${category} OR "category"."parent_id" = ${category}` : ""};`, {
                 type: sequelize.QueryTypes.SELECT
             })
 
