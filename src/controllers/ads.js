@@ -186,14 +186,13 @@ class AdsController {
                 where: filter,
                 attributes: {
                     include: [
-                        [Sequelize.fn("SUM", Sequelize.col('requests.amount')), "totalHelp"],
-                        [Sequelize.fn("MIN", Sequelize.col('ads.amount')), "min"],
-                        [Sequelize.fn("MAX", Sequelize.col('ads.amount')), "max"],
+                        [Sequelize.fn("SUM", Sequelize.col('requests.amount')), "totalHelp"]
                     ]
                 },
                 include: _include,
                 group,
-                subQuery: false
+                subQuery: false,
+                logging: () => console.log
             })
 
             // const pagesCount = Math.ceil(allAds.count.length / limit)
