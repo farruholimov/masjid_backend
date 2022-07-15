@@ -97,7 +97,7 @@ class AdsController {
             const limit = query.limit || 10000000000000000
             const page = query.page - 1 || 0
             const offset = page * Number(limit)
-            const user = query.user
+            const category = query.category_id
 
             let filter = {},
                 group = ["ads.id", "requests.id", "category.id", "mosque.id"]
@@ -193,6 +193,10 @@ class AdsController {
                 group,
                 subQuery: false,
                 logging: true
+            })
+
+            const min = await sequelize.query(`SELECT MIN("ads"."amount") AS "min" FROM "ads" LEFT OUTER JOIN "categories" AS "category" ON "ads"."category_id" = "category"."id" ${category ? ` OR "category"."parent_id" = ${category}` : ""};`, {
+                type: sequelize.QueryTypes.SELECT
             })
 
             // const pagesCount = Math.ceil(allAds.count.length / limit)
