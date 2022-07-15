@@ -199,20 +199,28 @@ class AdsController {
                 type: sequelize.QueryTypes.SELECT
             })
 
-            // const pagesCount = Math.ceil(allAds.count.length / limit)
-            // const nextPage = pagesCount < page + 1 ? null : page + 1
+            const max = await sequelize.query(`SELECT MAX("ads"."amount") AS "min" FROM "ads" LEFT OUTER JOIN "categories" AS "category" ON "ads"."category_id" = "category"."id" ${category ? ` OR "category"."parent_id" = ${category}` : ""};`, {
+                type: sequelize.QueryTypes.SELECT
+            })
+
+            const pagesCount = Math.ceil(allAds.count.length / limit)
+            const nextPage = pagesCount < page + 1 ? null : page + 1
 
             res.status(200).json({
                 ok: true,
                 data: {
                     ads: allAds.rows,
-                    // count: allAds.count.length,
-                    // pagination: {
-                    //     pages: pagesCount,
-                    //     current: page,
-                    //     next: nextPage,
-                    //     limit: Number(limit)
-                    // }
+                    count: allAds.count.length,
+                    range: {
+                        min: min[0].min,
+                        max: max[0].man
+                    },
+                    pagination: {
+                        pages: pagesCount,
+                        current: page,
+                        next: nextPage,
+                        limit: Number(limit)
+                    }
                 }
             })
         } catch (error) {
