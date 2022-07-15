@@ -192,7 +192,7 @@ class AdsController {
                 include: _include,
                 group,
                 subQuery: false,
-                logging: () => console.log
+                logging: true
             })
 
             // const pagesCount = Math.ceil(allAds.count.length / limit)
