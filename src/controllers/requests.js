@@ -92,8 +92,8 @@ class ReqsController{
         try {
             const { query } = req
 
-            const user = query.user
-            const ad = query.ad
+            const user = query.user_id
+            const ad = query.ad_id
             const exact = query.exact
 
             let filter = {}
