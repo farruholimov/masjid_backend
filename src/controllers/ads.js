@@ -186,7 +186,9 @@ class AdsController {
                 where: filter,
                 attributes: {
                     include: [
-                        [Sequelize.fn("SUM", Sequelize.col('requests.amount')), "totalHelp"]
+                        [Sequelize.fn("SUM", Sequelize.col('requests.amount')), "totalHelp"],
+                        [Sequelize.fn("MIN", Sequelize.col('ads.amount')), "min"],
+                        [Sequelize.fn("MAX", Sequelize.col('ads.amount')), "max"],
                     ]
                 },
                 include: _include,
