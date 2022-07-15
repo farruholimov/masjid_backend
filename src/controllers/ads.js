@@ -180,34 +180,36 @@ class AdsController {
                     group.push("category->user_categories.id")
             }
 
-            const allAds = await ads.findAndCountAll({
+            const allAds = await ads.findAll({
                 limit: Number(limit),
                 offset: offset,
                 where: filter,
-                attributes: [
-                    [Sequelize.fn("SUM", Sequelize.col('requests.amount')), "totalHelp"],
-                    [Sequelize.fn("MIN", Sequelize.col('ads.amount')), "min"],
-                    [Sequelize.fn("MAX", Sequelize.col('ads.amount')), "max"],
-                ],
+                attributes: {
+                    include: [
+                        [Sequelize.fn("SUM", Sequelize.col('requests.amount')), "totalHelp"],
+                        [Sequelize.fn("MIN", Sequelize.col('ads.amount')), "min"],
+                        [Sequelize.fn("MAX", Sequelize.col('ads.amount')), "max"],
+                    ]
+                },
                 include: _include,
                 group,
                 subQuery: false
             })
 
-            const pagesCount = Math.ceil(allAds.count.length / limit)
-            const nextPage = pagesCount < page + 1 ? null : page + 1
+            // const pagesCount = Math.ceil(allAds.count.length / limit)
+            // const nextPage = pagesCount < page + 1 ? null : page + 1
 
             res.status(200).json({
                 ok: true,
                 data: {
                     ads: allAds.rows,
-                    count: allAds.count.length,
-                    pagination: {
-                        pages: pagesCount,
-                        current: page,
-                        next: nextPage,
-                        limit: Number(limit)
-                    }
+                    // count: allAds.count.length,
+                    // pagination: {
+                    //     pages: pagesCount,
+                    //     current: page,
+                    //     next: nextPage,
+                    //     limit: Number(limit)
+                    // }
                 }
             })
         } catch (error) {
