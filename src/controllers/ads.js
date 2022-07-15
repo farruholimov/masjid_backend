@@ -192,7 +192,7 @@ class AdsController {
                 include: _include,
                 group,
                 subQuery: false,
-                logging: true
+                // logging: true
             })
 
             const min = await sequelize.query(`SELECT MIN("ads"."amount") AS "min" FROM "ads" LEFT OUTER JOIN "categories" AS "category" ON "ads"."category_id" = "category"."id" ${category ? ` OR "category"."parent_id" = ${category}` : ""};`, {
