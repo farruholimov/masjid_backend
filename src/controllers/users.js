@@ -151,6 +151,7 @@ class UsersController{
             message: "Logged in succesfully!",
             data: {
                 token: token, 
+                user
             },
         });
 
