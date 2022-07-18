@@ -487,7 +487,15 @@ class UsersController{
 
     static async Profile(req, res, next) {
         try {
+            console.log(req);
 
+            res.status(200).json({
+                ok: true,
+                data: {
+                    user
+                }
+            })
+            return
             const user = await users.findOne({
                 where: {
                     id: req.user.id
