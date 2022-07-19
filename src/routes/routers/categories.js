@@ -1,5 +1,5 @@
-const { GetAll, GetOne, Create, Update, Delete, GetUserCategories, GetAllTg, GetOneTg, CreateUserCategory, DeleteUserCategory} = require("../controllers/categories")
-const protect = require("../middlewares/auth/protect")
+const { GetAll, GetOne, Create, Update, Delete, GetUserCategories, GetAllTg, GetOneTg, CreateUserCategory, DeleteUserCategory} = require("../../controllers/categories")
+const protect = require("../../middlewares/auth/protect")
 
 const CategoriesRouter = require("express").Router()
 

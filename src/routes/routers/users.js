@@ -1,5 +1,5 @@
-const { GetAll, Login, GenerateToken, GetOne, Profile, Create, GetOneTg, Update, CreateMosqueAdmin, GetMosqueAdmin, UpdateMosqueAdmin, LoginMA, Delete } = require("../controllers/users")
-const protect = require("../middlewares/auth/protect")
+const { GetAll, Login, GenerateToken, GetOne, Profile, Create, GetOneTg, Update, CreateMosqueAdmin, GetMosqueAdmin, UpdateMosqueAdmin, LoginMA, Delete } = require("../../controllers/users")
+const protect = require("../../middlewares/auth/protect")
 
 const UsersRouter = require("express").Router()
 

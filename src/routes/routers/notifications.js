@@ -1,5 +1,5 @@
-const { GetAll, Watch } = require("../controllers/notifications")
-const protect = require("../middlewares/auth/protect")
+const { GetAll, Watch } = require("../../controllers/notifications")
+const protect = require("../../middlewares/auth/protect")
 
 const NotificationsRouter = require("express").Router()
 

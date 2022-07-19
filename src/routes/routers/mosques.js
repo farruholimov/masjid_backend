@@ -1,5 +1,5 @@
-const { GetAll, GetOne, Create, Update, Delete, GetAllTg} = require("../controllers/mosques")
-const protect = require("../middlewares/auth/protect")
+const { GetAll, GetOne, Create, Update, Delete, GetAllTg} = require("../../controllers/mosques")
+const protect = require("../../middlewares/auth/protect")
 
 const MosquesRouter = require("express").Router()
 

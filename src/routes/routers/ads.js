@@ -1,5 +1,5 @@
-const { GetAll, GetOne, Create, Update, Delete, GetAmountRange} = require("../controllers/ads")
-const protect = require("../middlewares/auth/protect")
+const { GetAll, GetOne, Create, Update, Delete, GetAmountRange} = require("../../controllers/ads")
+const protect = require("../../middlewares/auth/protect")
 
 const AdsRouter = require("express").Router()
 
