@@ -105,8 +105,7 @@ class Feedbacks {
                 include: [{
                     model: users,
                     attributes: ["id", "telegram_id", "full_name", "phone_number", "role"]
-                }],
-                raw: true
+                }]
             })
 
             const pagesCount = Math.ceil(allFeedbacks.count / limit)
