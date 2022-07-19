@@ -1,5 +1,5 @@
 module.exports = (sequelize) => {
-    const { users, admin_users, categories, ads, user_categories, mosques, mosque_admins, requests, notifications, notification_objects } = sequelize.models
+    const { users, admin_users, categories, ads, user_categories, mosques, mosque_admins, requests, notifications, notification_objects, feedbacks } = sequelize.models
 
     categories.hasMany(categories, {foreignKey: "parent_id", as: "children", allowNull: true})
 
@@ -26,6 +26,10 @@ module.exports = (sequelize) => {
 
     users.hasMany(requests, { foreignKey: "user_id" });
     requests.belongsTo(users, { foreignKey: "user_id", allowNull: false });
+
+
+    users.hasMany(feedbacks, { foreignKey: "user_id" });
+    feedbacks.belongsTo(users, { foreignKey: "user_id", allowNull: false });
 
     ads.hasMany(requests, { foreignKey: "ad_id" });
     requests.belongsTo(ads, { foreignKey: "ad_id", allowNull: false });

@@ -361,11 +361,17 @@ class UsersController{
                 include: _include
             })
 
+            const pagesCount = Math.ceil(allUsers.count / limit)
+            const nextPage = pagesCount < page + 1 ? null : page + 1
+
             res.status(200).json({
                 ok: true,
                 data: {
                     users: allUsers.rows,
-                    count: allUsers.count
+                    count: allUsers.count,
+                    pagination: {
+                        pages: pagesCount, current: page, next: nextPage, limit: limit
+                    }
                 }
             })
         } catch (error) {

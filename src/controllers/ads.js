@@ -94,7 +94,7 @@ class AdsController {
                 query
             } = req
 
-            const limit = query.limit || 10000000000000000
+            const limit = query.limit || 20
             const page = query.page - 1 || 0
             const offset = page * Number(limit)
             const category = query.category_id
@@ -203,14 +203,14 @@ class AdsController {
                 type: sequelize.QueryTypes.SELECT
             })
 
-            const pagesCount = Math.ceil(allAds.count.length / limit)
+            const pagesCount = Math.ceil(allAds.count / limit)
             const nextPage = pagesCount < page + 1 ? null : page + 1
 
             res.status(200).json({
                 ok: true,
                 data: {
                     ads: allAds.rows,
-                    count: allAds.count.length,
+                    count: allAds.count,
                     range: {
                         min: min[0].min,
                         max: max[0].max

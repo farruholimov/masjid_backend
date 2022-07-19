@@ -14,6 +14,7 @@ const modelDefiners = [
     require('./models/ads/requests'),
     require('./models/notifications/notification_objects'),
     require('./models/notifications/notifications'),
+    require('./models/feedbacks/feedbacks'),
 ]
 
 const sequelize = new Sequelize(configs.DB_CONNECTION_URL, {
