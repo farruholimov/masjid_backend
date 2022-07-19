@@ -203,14 +203,14 @@ class AdsController {
                 type: sequelize.QueryTypes.SELECT
             })
 
-            const pagesCount = Math.ceil(allAds.count / limit)
+            const pagesCount = Math.ceil(allAds.count.length / limit)
             const nextPage = pagesCount < page + 1 ? null : page + 1
 
             res.status(200).json({
                 ok: true,
                 data: {
                     ads: allAds.rows,
-                    count: allAds.count,
+                    count: allAds.count.length,
                     range: {
                         min: min[0].min,
                         max: max[0].max
