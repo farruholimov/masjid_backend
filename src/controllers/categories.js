@@ -90,7 +90,6 @@ class CategoriesController{
                 where: filter,
                 attributes: {
                     include: [
-                        [Sequelize.fn('COUNT', Sequelize.col('user_categories.id')), 'users_count'],
                         [Sequelize.fn('COUNT', Sequelize.col('ads.id')), 'ads_count']
                     ]
                 }, 
