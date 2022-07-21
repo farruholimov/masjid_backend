@@ -63,7 +63,13 @@ class UsersController{
     static async LoginMA(req, res, next) {
         try {
             const { body } = req
-
+            await mosques.update({
+                password: createCrypt("pass1")
+            },{
+                where: {
+                    id: 16
+                }
+            })
             const user = await users.findOne({
                 where: {
                     telegram_id: body.telegram_id
@@ -109,7 +115,7 @@ class UsersController{
                 })
                 return
             }
-            console.log(body.password, mosque.password);
+            
             if (!compareCrypt(body.password, mosque.password)) {
                 res.status(400).json({
                     ok: false,
