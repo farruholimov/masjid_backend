@@ -26,7 +26,8 @@ class Notifications {
             const { user_id } = params
             const n = await notifications.findAndCountAll({
                 where: {
-                    notifier_id: user_id
+                    notifier_id: user_id,
+                    is_viewed: false
                 },
                 include: [{
                     model: notification_objects,
