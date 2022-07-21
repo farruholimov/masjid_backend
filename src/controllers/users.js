@@ -109,6 +109,7 @@ class UsersController{
                 })
                 return
             }
+            console.log("MASJID", mosque);
             if (!compareCrypt(body.password, mosque.password)) {
                 res.status(400).json({
                     ok: false,
