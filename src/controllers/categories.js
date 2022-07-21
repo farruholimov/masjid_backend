@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize")
+const { Sequelize, where } = require("sequelize")
 const sequelize = require("../db/db")
 const { mosques, mosque_admins, users, categories, ads, user_categories } = sequelize.models
 
@@ -76,10 +76,18 @@ class CategoriesController{
             const page = query.page - 1 || 0
             const offset = page * limit
 
-            const allCategories = await categories.findAll({
-                where: {
-                    parent_id: null,
-                },
+            let filter = {
+                parent_id: null,
+            }
+
+            if (query.parent_id) {
+                filter.parent_id = query.parent_id
+            }
+
+            const allCategories = await categories.findAndCountAll({
+                limit,
+                offset,
+                where: filter,
                 attributes: {
                     include: [
                         [Sequelize.fn('COUNT', Sequelize.col('user_categories.id')), 'users_count'],
@@ -89,11 +97,6 @@ class CategoriesController{
                 include: [
                     {
                         model: ads,
-                        required: false,
-                        attributes: []
-                    },
-                    {
-                        model: user_categories,
                         required: false,
                         attributes: []
                     },
@@ -108,10 +111,16 @@ class CategoriesController{
                 subQuery: false
             })
 
+            const pagesCount = Math.ceil(allCategories.count / limit)
+            const nextPage = pagesCount < page + 1 ? null : page + 1
+
             res.status(200).json({
                 ok: true,
                 data: {
-                    categories: allCategories,
+                    categories: allCategories.rows,
+                    pagination: {
+                        pages: pagesCount, current: page, next: nextPage, limit: limit
+                    }
                 }
             })
         } catch (error) {
@@ -203,16 +212,36 @@ class CategoriesController{
         try {
             const { query } = req
 
-            const limit = query.limit || 20
+            const limit = query.limit || 10
             const page = query.page - 1 || 0
             const offset = page * limit
 
-            const allCategories = await categories.findAll()
+            let filter = {
+                parent_id: null,
+            }
+
+            if (query.parent_id) {
+                filter.parent_id = query.parent_id
+            }
+
+            const allCategories = await categories.findAndCountAll(
+                {
+                    limit,
+                    offset,
+                    where: filter
+                }
+            )
+
+            const pagesCount = Math.ceil(allCategories.count / limit)
+            const nextPage = pagesCount < page + 1 ? null : page + 1
 
             res.status(200).json({
                 ok: true,
                 data: {
-                    categories: allCategories
+                    categories: allCategories.rows,
+                    pagination: {
+                        pages: pagesCount, current: page, next: nextPage, limit: limit
+                    }
                 }
             })
         } catch (error) {
