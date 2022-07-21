@@ -35,6 +35,7 @@ class Notifications {
                     }]
                 }]
             })
+            console.log(count);
             if (count == true) {
                 res.status(200).json({
                     ok: true,
