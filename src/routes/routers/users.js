@@ -3,9 +3,9 @@ const protect = require("../../middlewares/auth/protect")
 
 const UsersRouter = require("express").Router()
 
+UsersRouter.get("/profile", protect, Profile)
 UsersRouter.get("/", protect, GetAll)
 UsersRouter.get("/:id", protect, GetOne)
-UsersRouter.get("/profile", protect, Profile)
 UsersRouter.get("/tg/:id", GetOneTg)
 UsersRouter.get("/mosque-admin/:id", GetMosqueAdmin)
 UsersRouter.post("/login", Login, GenerateToken)
