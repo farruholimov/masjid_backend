@@ -8,20 +8,32 @@ module.exports = async (sequelize, DataTypes) => {
         },
         name: {
             type: DataTypes.STRING(),
-            allowNull: false,
-            unique: true
+            allowNull: false
         },
         location: {
             type: DataTypes.STRING(),
         },
-        phone: {
+        longitude: {
             type: DataTypes.STRING(),
         },
+        latitude: {
+            type: DataTypes.STRING(),
+        },
+        image_src: {
+            type: DataTypes.STRING(),
+            allowNull: false
+        },
+        phone: {
+            type: DataTypes.STRING(),
+            allowNull: false
+        },
         password: {
-          type: DataTypes.STRING(64)
+          type: DataTypes.STRING(64),
+          allowNull: false
         },
         username: {
           type: DataTypes.STRING(64),
+          allowNull: false,
           unique: true
         }
 

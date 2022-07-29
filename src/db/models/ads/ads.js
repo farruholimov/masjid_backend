@@ -35,6 +35,11 @@ module.exports = async (sequelize, DataTypes) => {
             type: DataTypes.STRING(36),
             allowNull: false
         },
+        priority: {
+            type: DataTypes.ENUM("low", "medium", "high"),
+            defaultValue: "low",
+            allowNull: false
+        },
         status: {
             type: DataTypes.INTEGER,
             allowNull: false,
