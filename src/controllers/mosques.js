@@ -1,11 +1,15 @@
-const { Sequelize } = require("sequelize")
+const { Sequelize } = require("sequelize");
+const { v4 } = require("uuid");
+const path = require("path");
 const sequelize = require("../db/db")
 const { mosques, mosque_admins, users, categories, ads } = sequelize.models
 
 class MosquesController{
     static async Create(req, res, next) {
         try {
-            const { body } = req
+            const { body, files } = req
+
+            if (!files || !files.image) throw new res.error(400, "Image is required!");
 
             const mosque = await mosques.findOne({
                 where: {
@@ -22,8 +26,14 @@ class MosquesController{
                 return
             }
 
+            let file = files.image;
+            let filename = v4() + ".jpeg";
+
+            await file.mv(path.join(__dirname, "..", "public", "uploads", filename));
+
             const newMosque = await mosques.create({
-                ...body
+                ...body,
+                image_src: filename
             })
 
             res.status(200).json({

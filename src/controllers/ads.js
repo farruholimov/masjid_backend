@@ -106,7 +106,7 @@ class AdsController {
 
             if (query && Object.keys(query).length) {
                 for (let key in query) {
-                    if (key != "user" && key != 'limit' && key != 'page' && key != 'category_id' && key != 'range') {
+                    if (key != "user" && key != 'limit' && key != 'page' && key != 'category_id') {
                         filter[`${key}`] = query[key]
                     } 
                     if (key == 'category_id') {
@@ -116,7 +116,7 @@ class AdsController {
                             }
                         })
 
-                        if (!cat.parent_id) {
+                        if (cat.parent_id) {
                             filter[`category_id`] = query[key]
                         } else {
                             categoryRequired = true
@@ -131,13 +131,13 @@ class AdsController {
                             }
                         }
                     }  
-                    if (key == 'range') {
-                        const min = query[key].split('and')[0]
-                        const max = query[key].split('and')[1]
-                        filter[`amount`] = {
-                            [Op.between]: [min, max]
-                        }
-                    }
+                    // if (key == 'range') {
+                    //     const min = query[key].split('and')[0]
+                    //     const max = query[key].split('and')[1]
+                    //     filter[`amount`] = {
+                    //         [Op.between]: [min, max]
+                    //     }
+                    // }
                 }
             }
 
@@ -167,19 +167,6 @@ class AdsController {
                 }
             ]
 
-            // if (user) {
-            //     _include[0].required = true,
-            //         _include[0].include = [{
-            //             model: user_categories,
-            //             attributes: ["user_id"],
-            //             required: true,
-            //             where: {
-            //                 user_id: user
-            //             },
-            //         }],
-            //         group.push("category->user_categories.id")
-            // }
-
             const allAds = await ads.findAndCountAll({
                 limit: Number(limit),
                 offset: offset,
@@ -195,14 +182,6 @@ class AdsController {
                 // logging: true
             })
 
-            const min = await sequelize.query(`SELECT MIN("ads"."amount") AS "min" FROM "ads" LEFT OUTER JOIN "categories" AS "category" ON "ads"."category_id" = "category"."id" ${category ? `WHERE "ads"."category_id" = ${category} OR "category"."parent_id" = ${category}` : ""};`, {
-                type: sequelize.QueryTypes.SELECT
-            })
-
-            const max = await sequelize.query(`SELECT MAX("ads"."amount") AS "max" FROM "ads" LEFT OUTER JOIN "categories" AS "category" ON "ads"."category_id" = "category"."id" ${category ? `WHERE "ads"."category_id" = ${category} OR "category"."parent_id" = ${category}` : ""};`, {
-                type: sequelize.QueryTypes.SELECT
-            })
-
             const pagesCount = Math.ceil(allAds.count.length / limit)
             const nextPage = pagesCount < page + 1 ? null : page + 1
 
@@ -211,16 +190,50 @@ class AdsController {
                 data: {
                     ads: allAds.rows,
                     count: allAds.count.length,
-                    range: {
-                        min: min[0].min,
-                        max: max[0].max
-                    },
                     pagination: {
                         pages: pagesCount,
                         current: page,
                         next: nextPage,
                         limit: Number(limit)
                     }
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async Search(req, res, next) {
+        try {
+            const {
+                query
+            } = req
+
+            const limit = query.limit || 20
+            const page = query.page - 1 || 0
+            const offset = page * Number(limit)
+            const search_query = query.search_query
+
+            const keyword = search_query.replace(new RegExp("\\+", "g"), " ")
+            console.log("SEARCH", keyword);
+
+            const allAds = await ads.findAll({
+                limit: Number(limit),
+                offset: offset,
+                where: {
+                    name: {
+                        [Op.iLike]: `%${keyword}%`
+                    }
+                }
+            })
+
+            const pagesCount = Math.ceil(allAds.count.length / limit)
+            const nextPage = pagesCount < page + 1 ? null : page + 1
+
+            res.status(200).json({
+                ok: true,
+                data: {
+                    ads: allAds
                 }
             })
         } catch (error) {
