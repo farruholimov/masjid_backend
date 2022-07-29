@@ -33,7 +33,6 @@ module.exports = async (sequelize, DataTypes) => {
         },
         username: {
           type: DataTypes.STRING(64),
-          allowNull: false,
           unique: true
         }
 
