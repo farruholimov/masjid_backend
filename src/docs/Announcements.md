@@ -1,10 +1,10 @@
-## Mosques 
+## Announcements 
 
 ### Create Endpoint
 
 ##### Request
 
-* `SERVER_URL/api/mosques`
+* `SERVER_URL/api/ads`
 
 Method
 * `POST`
@@ -15,22 +15,18 @@ Headers:
 
 Permissions:
 * `Super admin`
+* `Mosque admin`
 
 Request body:
 | Name | Description | Type | Required |
 | ----------- | ----------- | ---- | --- |
-| name | -- | String | true |
-| location | maps link | String | true |
-| longitude | -- | String | true |
-| latitude | -- | String | true |
-| phone | Mosque's contact phone number | String (+998) | true |
-| username | Mosque username for admins (4, 64, unique) | String | true |
-| password | Mosque password for admins (6, 64) | String | true |
-
-Files: 
-| Name | Description | Type | Required |
-| ----------- | ----------- | ---- | --- |
-| image | -- | file | true |
+| name | -- | String (100) | true |
+| text | additional info | String | false |
+| amount | Needed help amount | Number | true |
+| amount_type | Needed help amount type | String (ect. kg) | true |
+| priority | -- | String (default: "low" valid: ["low", "medium", "high"]) | false |
+| mosque_id | id of mosque | Number | true |
+| category_id | id of category | Number | true |
 
 ##### Response status codes
 
@@ -42,7 +38,7 @@ Files:
 
 ##### Request
 
-* `SERVER_URL/api/mosques`
+* `SERVER_URL/api/ads`
 
 Method
 * `GET`
@@ -71,7 +67,7 @@ Query body:
 
 ##### Request
 
-* `SERVER_URL/api/mosques/:mosque_id`
+* `SERVER_URL/api/ads/:ad_id`
 
 Method
 * `GET`
@@ -95,7 +91,7 @@ Permissions:
 
 ##### Request
 
-* `SERVER_URL/api/mosques/:mosque_id`
+* `SERVER_URL/api/ads/:ad_id`
 
 Method
 * `PUT`
@@ -106,17 +102,17 @@ Headers:
 
 Permissions:
 * `Super admin`
+* `Mosque admin`
 
 Body:
 | Name | Description | Type | Required |
 | ----------- | ----------- | ---- | --- |
-| name | -- | String | false |
-| location | maps link | String | false |
-| longitude | -- | String | false |
-| latitude | -- | String | false |
-| phone | Mosque's contact phone number | String (+998) | false |
-| username | Mosque username for admins (4, 64, unique) | String | false |
-| password | Mosque password for admins (6, 64) | String | false |
+| name | -- | String (100) | false |
+| text | additional info | String | false |
+| amount | Needed help amount | Number | false |
+| amount_type | Needed help amount type | String (ect. kg) | false |
+| priority | -- | String (default: "low" valid: ["low", "medium", "high"]) | false |
+| category_id | id of category | Number | false |
 
 ##### Response status codes
 
@@ -128,7 +124,7 @@ Body:
 
 ##### Request
 
-* `SERVER_URL/api/mosques/:mosque_id`
+* `SERVER_URL/api/ads/:ad_id`
 
 Method
 * `DELETE`
@@ -139,6 +135,7 @@ Headers:
 
 Permissions:
 * `Super admin`
+* `Mosque admin`
 
 ##### Response status codes
 

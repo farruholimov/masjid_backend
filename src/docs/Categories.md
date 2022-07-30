@@ -1,10 +1,10 @@
-## Mosques 
+## Categories 
 
 ### Create Endpoint
 
 ##### Request
 
-* `SERVER_URL/api/mosques`
+* `SERVER_URL/api/categories`
 
 Method
 * `POST`
@@ -20,17 +20,8 @@ Request body:
 | Name | Description | Type | Required |
 | ----------- | ----------- | ---- | --- |
 | name | -- | String | true |
-| location | maps link | String | true |
-| longitude | -- | String | true |
-| latitude | -- | String | true |
-| phone | Mosque's contact phone number | String (+998) | true |
-| username | Mosque username for admins (4, 64, unique) | String | true |
-| password | Mosque password for admins (6, 64) | String | true |
-
-Files: 
-| Name | Description | Type | Required |
-| ----------- | ----------- | ---- | --- |
-| image | -- | file | true |
+| text | description of category | String | false |
+| parent_id | if category is children | Number (id of category) | false |
 
 ##### Response status codes
 
@@ -42,7 +33,7 @@ Files:
 
 ##### Request
 
-* `SERVER_URL/api/mosques`
+* `SERVER_URL/api/categories`
 
 Method
 * `GET`
@@ -71,7 +62,7 @@ Query body:
 
 ##### Request
 
-* `SERVER_URL/api/mosques/:mosque_id`
+* `SERVER_URL/api/categories/:category_id`
 
 Method
 * `GET`
@@ -82,8 +73,6 @@ Headers:
 
 Permissions:
 * `Super admin`
-* `Mosque admin`
-* `User`
 
 ##### Response status codes
 
@@ -95,7 +84,7 @@ Permissions:
 
 ##### Request
 
-* `SERVER_URL/api/mosques/:mosque_id`
+* `SERVER_URL/api/categories/:category_id`
 
 Method
 * `PUT`
@@ -111,12 +100,8 @@ Body:
 | Name | Description | Type | Required |
 | ----------- | ----------- | ---- | --- |
 | name | -- | String | false |
-| location | maps link | String | false |
-| longitude | -- | String | false |
-| latitude | -- | String | false |
-| phone | Mosque's contact phone number | String (+998) | false |
-| username | Mosque username for admins (4, 64, unique) | String | false |
-| password | Mosque password for admins (6, 64) | String | false |
+| text | description of category | String | false |
+| parent_id | if category is children | Number (id of category) | false |
 
 ##### Response status codes
 
@@ -128,7 +113,7 @@ Body:
 
 ##### Request
 
-* `SERVER_URL/api/mosques/:mosque_id`
+* `SERVER_URL/api/categories/:category_id`
 
 Method
 * `DELETE`
