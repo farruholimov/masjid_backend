@@ -91,11 +91,11 @@ Permissions:
 * `400 - Not found`  
 * `500 - Internal Server Error`
 
-### User Update Endpoint
+### Update Endpoint
 
 ##### Request
 
-* `SERVER_URL/api/users/:user_id`
+* `SERVER_URL/api/mosques/:mosque_id`
 
 Method
 * `PUT`
@@ -106,14 +106,17 @@ Headers:
 
 Permissions:
 * `Super admin`
-* `Mosque admin`
-* `User`
 
 Body:
-| Name | Type | Required |
-| ----------- | ---- | --- |
-| full_name | String | false |
-| phone_number | String (+998) | false |
+| Name | Description | Type | Required |
+| ----------- | ----------- | ---- | --- |
+| name | -- | String | false |
+| location | maps link | String | false |
+| longitude | -- | String | false |
+| latitude | -- | String | false |
+| phone | Mosque's contact phone number | String (+998) | false |
+| username | Mosque username for admins (4, 64, unique) | String | false |
+| password | Mosque password for admins (6, 64) | String | false |
 
 ##### Response status codes
 
@@ -121,11 +124,11 @@ Body:
 * `400 - Failed`  
 * `500 - Internal Server Error`
 
-### User Delete Endpoint
+### Delete Endpoint
 
 ##### Request
 
-* `SERVER_URL/api/users/:user_id`
+* `SERVER_URL/api/mosques/:mosque_id`
 
 Method
 * `DELETE`
