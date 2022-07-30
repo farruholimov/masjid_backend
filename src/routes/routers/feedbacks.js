@@ -5,7 +5,7 @@ const FeedbacksRouter = require("express").Router()
 
 FeedbacksRouter.get("/", protect, GetAll)
 FeedbacksRouter.get("/:id", protect, GetOne)
-FeedbacksRouter.post("/", Create)
+FeedbacksRouter.post("/", protect, Create)
 FeedbacksRouter.put("/:id", protect, Update)
 FeedbacksRouter.delete("/:id", protect, Delete)
 

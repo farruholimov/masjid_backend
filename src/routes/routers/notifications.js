@@ -3,7 +3,7 @@ const protect = require("../../middlewares/auth/protect")
 
 const NotificationsRouter = require("express").Router()
 
-NotificationsRouter.get("/:user_id", GetAll)
+NotificationsRouter.get("/:user_id", protect, GetAll)
 NotificationsRouter.put("/:id", Watch)
 
 module.exports = NotificationsRouter

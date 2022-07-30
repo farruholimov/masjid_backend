@@ -3,10 +3,10 @@ const protect = require("../../middlewares/auth/protect")
 
 const ReqsRouter = require("express").Router()
 
-ReqsRouter.get("/", GetAll)
-ReqsRouter.get("/:id", GetOne)
-ReqsRouter.post("/", Create)
-ReqsRouter.put("/:id", Update)
-ReqsRouter.delete("/:id", Delete)
+ReqsRouter.get("/", protect, GetAll)
+ReqsRouter.get("/:id", protect, GetOne)
+ReqsRouter.post("/", protect, Create)
+ReqsRouter.put("/:id", protect, Update)
+ReqsRouter.delete("/:id", protect, Delete)
 
 module.exports = ReqsRouter

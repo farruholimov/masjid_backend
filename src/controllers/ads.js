@@ -218,17 +218,13 @@ class AdsController {
             console.log("SEARCH", keyword);
 
             const allAds = await ads.findAll({
-                limit: Number(limit),
-                offset: offset,
+                attributes: ["id", "name", "amount", "amount_type"],
                 where: {
                     name: {
                         [Op.iLike]: `%${keyword}%`
                     }
                 }
             })
-
-            const pagesCount = Math.ceil(allAds.count.length / limit)
-            const nextPage = pagesCount < page + 1 ? null : page + 1
 
             res.status(200).json({
                 ok: true,

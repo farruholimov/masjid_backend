@@ -1,7 +1,8 @@
 const { Sequelize } = require("sequelize");
 const { v4 } = require("uuid");
 const path = require("path");
-const sequelize = require("../db/db")
+const sequelize = require("../db/db");
+const { Op } = require("sequelize");
 const { mosques, mosque_admins, users, categories, ads } = sequelize.models
 
 class MosquesController{
@@ -114,6 +115,38 @@ class MosquesController{
                 data: {
                     mosques: allMosques.rows,
                     count: allMosques.count
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async Search(req, res, next) {
+        try {
+            const {
+                query
+            } = req
+
+            const limit = query.limit || 20
+            const page = query.page - 1 || 0
+            const offset = page * Number(limit)
+            const search_query = query.search_query
+
+            const keyword = search_query.replace(new RegExp("\\+", "g"), " ")
+
+            const allMosques = await mosques.findAll({
+                attributes: ["id", "name", "image_src"],
+                where: {
+                    name: {
+                        [Op.iLike]: `%${keyword}%`
+                    }
+                }
+            })
+
+            res.status(200).json({
+                ok: true,
+                data: {
+                    mosques: allMosques
                 }
             })
         } catch (error) {
